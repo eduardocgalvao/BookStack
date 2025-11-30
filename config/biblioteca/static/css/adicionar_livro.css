@@ -65,9 +65,21 @@ label {
 
 input, select {
     padding: 8px;
-    border: 1px solid #d3d3d3;
-    border-radius: 4px;
+    border-radius: 5px;
     font-size: 14px;
+    padding: 10px 20px;
+    border: 1px solid #BAD7E3;
+    border-radius: 5px;
+    outline: none;
+    font-weight: 600;
+    color: #1c1c1c;
+    padding-left: 1%;
+}
+
+/* Estado de foco (quando o input está ativo) */
+input:focus {
+    border-color: #4BC1D2;
+    box-shadow: 0 0 5px rgba(75, 193, 210, 0.5);
 }
 
 .btn-area {

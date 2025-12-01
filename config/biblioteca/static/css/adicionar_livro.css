@@ -24,13 +24,13 @@ body {
 }
 
 .logo {
-    width: 80px;
+    width:100px;
 }
 
 .titulo {
     margin-top: 5px;
     font-size: 32px;
-    color: #003b4a;
+    color: #004A46;
 }
 
 /* Card */
@@ -75,7 +75,7 @@ input, select {
 }
 
 input:focus {
-    border-color: #4BC1D2;
+    border-color: #004A46;
     box-shadow: 0 0 5px rgba(75, 193, 210, 0.5);
 }
 
@@ -96,7 +96,7 @@ input:focus {
 }
 
 .btn-add:hover {
-    background: #087d7a;
+    background: #008E87;
 }
 
 /* Popup */

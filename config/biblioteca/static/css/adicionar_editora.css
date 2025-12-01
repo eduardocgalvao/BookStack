@@ -13,6 +13,7 @@ body {
     font-size: 26px;
     text-decoration: none;
     color: black;
+    cursor: pointer;
 }
 
 .top-header {
@@ -21,7 +22,7 @@ body {
 }
 
 .logo {
-    width: 90px;
+    width: 100px;
 }
 
 .titulo {
@@ -64,8 +65,8 @@ body {
 }
 
 .campo input:focus {
-    border-color: #0e9c99;
-    box-shadow: 0 0 5px rgba(14,156,153,0.4);
+    border-color: #004A46;
+    box-shadow: 0 0 5px rgba(75, 193, 210, 0.5);
 }
 
 /* Botão */
@@ -85,5 +86,5 @@ body {
 }
 
 .btn-add:hover {
-    background: #087d7a;
+    background: #008E87;
 }

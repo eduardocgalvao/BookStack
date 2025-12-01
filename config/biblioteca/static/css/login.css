@@ -77,7 +77,7 @@ hr {
 input {
     width: 420px;
     padding: 10px 20px;
-    border: 1px solid #BAD7E3;
+    border: 1px solid #4db8b6;
     border-radius: 5px;
     outline: none;
     font-weight: 600;
@@ -87,8 +87,8 @@ input {
 
 /* Estado de foco (quando o input está ativo) */
 input:focus {
-    border-color: #4BC1D2;
-    box-shadow: 0 0 5px rgba(75, 193, 210, 0.5);
+    border-color: #0e9c99;
+    box-shadow: 0 0 5px rgba(14,156,153,0.4);
 }
 
 /* ========================================
@@ -102,7 +102,7 @@ button {
     border: none;
     color: #fff;
     border-radius: 8px;
-    background: #4BC1D2;
+    background: #0e9c99;
     margin: 20px 0 0 0;
 }
 
@@ -110,7 +110,7 @@ button {
 .btn {
     width: 230px;
     padding: 12px 15px;
-    background: #4cc0cf;
+    background: #0e9c99;
     color: #fff;
     border: none;
     border-radius: 6px;

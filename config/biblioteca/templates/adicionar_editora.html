@@ -2,50 +2,45 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adicionar Editora</title>
     <link rel="stylesheet" href="{% static 'css/adicionar_editora.css' %}" />
-</head>
-<body>
-
+  </head>
+  <body>
     <a href="{% url 'tela_inicial' %}" class="back-btn">←</a>
 
     <div class="top-header">
-        <img src="/static/img/logo.png" class="logo">
-        <h1 class="titulo">BookStack</h1>
+      <img src="/static/img/logo.png" class="logo" />
+      <h1 class="titulo">Adicionar Editora</h1>
     </div>
 
     <div class="container">
-        <form action="{% url 'adicionar_editora' %}" method="POST">
-            {% csrf_token %}
+      <form action="{% url 'adicionar_editora' %}" method="POST">
+        {% csrf_token %}
 
-            <div class="form-grid">
+        <div class="form-grid">
+          <div class="campo">
+            <label>Nome da Editora:</label>
+            <input type="text" name="nome_editora" required />
+          </div>
 
-                <div class="campo">
-                    <label>Nome da Editora:</label>
-                    <input type="text" name="nome" required>
-                </div>
+          <div class="campo">
+            <label>Endereço:</label>
+            <input type="text" name="endereco" />
+          </div>
 
-                <div class="campo">
-                    <label>Endereço:</label>
-                    <input type="text" name="endereco">
-                </div>
+          <div class="campo">
+            <label>Cidade:</label>
+            <input type="text" name="cidade" />
+          </div>
+        </div>
 
-                <div class="campo">
-                    <label>Cidade:</label>
-                    <input type="text" name="cidade">
-                </div>
-
-            </div>
-
-            <div class="btn-area">
-                <button class="btn-add">Adicionar Editora</button>
-            </div>
-
-        </form>
+        <div class="btn-area">
+          <button class="btn-add">Adicionar Editora</button>
+        </div>
+      </form>
     </div>
-
-</body>
+  </body>
 </html>

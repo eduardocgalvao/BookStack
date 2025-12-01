@@ -28,14 +28,13 @@ body {
 }
 
 .logo {
-    width: 90px;
+    width: 100px;
 }
 
 .titulo {
     margin-top: 5px;
     font-size: 32px;
     color: #003b4a;
-    font-weight: 700;
 }
 
 /* Card container */

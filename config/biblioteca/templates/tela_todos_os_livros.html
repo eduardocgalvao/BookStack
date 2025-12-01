@@ -1,0 +1,146 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todos os Livros - BookStack</title>
+
+    <link rel="stylesheet" href="{% static 'css/tela_todos_os_livros.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  <div class="livros-container">
+    <div class="top-bar">
+      <a href="#" class="voltar">←</a>
+
+      <div class="search-box">
+        <input type="text" placeholder="Procurar por nome do livro..." />
+      </div>
+
+      <img src="/static/img/logo.png" class="logo-bookstack" />
+    </div>
+
+    <div class="card-tabela">
+      <table class="tabela-livros">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Título</th>
+            <th>Ano Publicação</th>
+            <th>Editora</th>
+            <th>Status</th>
+            <th>Autores</th>
+            <th>Categoria</th>
+            <th>Data de Criação</th>
+            <th>Data de Atualização</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td class="edit-icon">✏️</td>
+            <td>1 Dom Casmurro</td>
+            <td>1899</td>
+            <td>Bloomsbury Publishing / Rocco Presença</td>
+            <td>Ativo</td>
+            <td>Machado de Assis</td>
+            <td>Romance</td>
+            <td>16/02/2022</td>
+            <td>17/02/2022</td>
+          </tr>
+
+          <tr>
+            <td class="edit-icon">✏️</td>
+            <td>2 Harry Potter and The Cursed Child</td>
+            <td>2016</td>
+            <td>Editora Carambaia</td>
+            <td>Ativo</td>
+            <td>J. K. Rowling</td>
+            <td>Fantasia</td>
+            <td>17/12/2024</td>
+            <td>13/09/2025</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Fundo escurecido -->
+  <div id="edit-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-modal">×</span>
+
+      <div class="form-grid">
+        <div class="campo">
+          <label>Título:</label>
+          <input type="text" id="edit-titulo" />
+        </div>
+
+        <div class="campo">
+          <label>Editora:</label>
+          <input type="text" id="edit-editora" />
+        </div>
+
+        <div class="campo">
+          <label>Autores:</label>
+          <input type="text" id="edit-autores" />
+        </div>
+
+        <div class="campo">
+          <label>Ano Publicação:</label>
+          <input type="text" id="edit-ano" />
+        </div>
+
+        <div class="campo">
+          <label>Endereço:</label>
+          <input type="text" id="edit-endereco" />
+        </div>
+
+        <div class="campo">
+          <label>Categoria:</label>
+          <input type="text" id="edit-categoria" />
+        </div>
+
+        <div class="campo">
+          <label>Status:</label>
+          <input type="text" id="edit-status" />
+        </div>
+
+        <div class="campo">
+          <label>Cidade:</label>
+          <input type="text" id="edit-cidade" />
+        </div>
+      </div>
+
+      <div class="btn-area">
+        <button class="btn-salvar">Salvar Alteração</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Abre o modal ao clicar no ícone
+    document.querySelectorAll(".edit-icon").forEach((icon) => {
+      icon.addEventListener("click", () => {
+        document.getElementById("edit-modal").classList.remove("hidden");
+      });
+    });
+
+    // Fecha no X
+    document.querySelector(".close-modal").addEventListener("click", () => {
+      document.getElementById("edit-modal").classList.add("hidden");
+    });
+
+    // Fecha ao clicar fora
+    document.getElementById("edit-modal").addEventListener("click", (e) => {
+      if (e.target.id === "edit-modal") {
+        document.getElementById("edit-modal").classList.add("hidden");
+      }
+    });
+  </script>
+</html>

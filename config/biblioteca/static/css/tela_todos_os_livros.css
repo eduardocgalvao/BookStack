@@ -1,0 +1,156 @@
+.livros-container {
+    width: 100%;
+    padding: 20px 40px;
+}
+
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.voltar {
+    font-size: 25px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.search-box {
+    width: 40%;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+.logo-bookstack {
+    width: 80px;
+    margin-right: 30px;
+}
+
+.card-tabela {
+    background: white;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 12px;
+    width: 90%;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.12);
+}
+
+.tabela-livros {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.tabela-livros thead tr {
+    background: #019c99;
+    color: white;
+}
+
+.tabela-livros thead th {
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.tabela-livros tbody td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.edit-icon {
+    font-size: 18px;
+    cursor: pointer;
+    padding-right: 10px;
+}
+
+/* MODAL */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    width: 70%;
+    border-radius: 10px;
+    padding: 40px 50px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.25);
+}
+
+/* Botão para fechar o modal */
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+/* GRID igual ao print — 3 colunas */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px 40px;
+    margin-top: 10px;
+}
+
+.campo label {
+    font-size: 14px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.campo input {
+    width: 90%;
+    padding: 10px 12px;
+    border: 1px solid #BAD7E3;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.campo input:focus {
+    border-color: #0e9c99;
+    box-shadow: 0 0 5px rgba(14,156,153,0.4);
+}
+
+/* Botão Salvar */
+.btn-area {
+    margin-top: 30px;
+    text-align: right;
+}
+
+.btn-salvar {
+    background: #0e9c99;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-salvar:hover {
+    background: #087d7a;
+}

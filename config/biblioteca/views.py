@@ -67,6 +67,13 @@ def tela_inicial(request):
     
     return render(request, 'tela_inicial.html', context)
 
+def tela_todos_livros(request):
+    """
+    Exibe uma lista de todos os livros disponíveis na biblioteca.
+    """
+    livros = tbl_livro.objects.all()
+    return render(request, 'tela_todos_os_livros.html', {'livros': livros})
+
 def adicionar_livro(request):
     """
     View para adicionar um novo livro ao acervo.

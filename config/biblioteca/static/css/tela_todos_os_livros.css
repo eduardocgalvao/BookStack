@@ -1,3 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lexend', sans-serif;
+}
+
 .livros-container {
     width: 100%;
     padding: 20px 40px;
@@ -22,11 +31,12 @@
 
 .search-box input {
     width: 100%;
-    padding: 10px 15px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background: #f9f9f9;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    background: #fff;
+    border: none;
+    outline: none;
+    padding: 12px 16px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 .logo-bookstack {
@@ -127,6 +137,7 @@
     padding: 10px 12px;
     border: 1px solid #BAD7E3;
     border-radius: 5px;
+    outline: none;
     font-size: 14px;
 }
 

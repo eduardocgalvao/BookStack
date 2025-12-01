@@ -1,4 +1,4 @@
-/* Importa a fonte 'Lexend' do Google Fonts com múltiplos pesos */
+/* Importa a fonte 'Lexend' */
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap');
 
 body {
@@ -16,8 +16,8 @@ body {
 
 .back-btn {
     position: absolute;
+    top: 25px;
     left: 30px;
-    top: 20px;
     font-size: 26px;
     text-decoration: none;
     color: black;
@@ -69,14 +69,11 @@ input, select {
     font-size: 14px;
     padding: 10px 20px;
     border: 1px solid #BAD7E3;
-    border-radius: 5px;
-    outline: none;
     font-weight: 600;
     color: #1c1c1c;
-    padding-left: 1%;
+    outline: none;
 }
 
-/* Estado de foco (quando o input está ativo) */
 input:focus {
     border-color: #4BC1D2;
     box-shadow: 0 0 5px rgba(75, 193, 210, 0.5);
@@ -102,7 +99,7 @@ input:focus {
     background: #087d7a;
 }
 
-/* POPUP */
+/* Popup */
 .popup {
     position: fixed;
     top: 0;

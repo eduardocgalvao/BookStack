@@ -109,6 +109,23 @@ def adicionar_livro(request):
     
     return render(request, 'adicionar_livro.html', {'form': form})
 
+def adicionar_editora(request):
+    """
+    View para adicionar uma nova editora.
+    
+    GET: Exibe o formulário de criação de editora.
+    POST: Processa o formulário e cria a editora no banco de dados.
+    """
+    if request.method == 'POST':
+        form = EditoraForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tela_inicial')
+    else:
+        form = EditoraForm()
+    
+    return render(request, 'adicionar_editora.html', {'form': form})
+
 def adicionar_autor(request):
     """
     View para adicionar um novo autor.
@@ -125,6 +142,23 @@ def adicionar_autor(request):
         form = AutorForm()
     
     return render(request, 'adicionar_autor.html', {'form': form})
+
+def adicionar_categoria(request):
+    """
+    View para adicionar uma nova categoria.
+    
+    GET: Exibe o formulário de criação de categoria.
+    POST: Processa o formulário e cria a categoria no banco de dados.
+    """
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tela_inicial')
+    else:
+        form = CategoriaForm()
+    
+    return render(request, 'adicionar_categoria.html', {'form': form})
 
 # CRIAR LIVRO ----------------------------------------------------------
 class LivroCreateView(View):

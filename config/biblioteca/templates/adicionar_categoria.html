@@ -18,30 +18,20 @@
     </div>
 
     <div class="container">
-        <form action="{% url 'adicionar_editora' %}" method="POST">
+        <form action="{% url 'adicionar_categoria' %}" method="POST">
             {% csrf_token %}
 
-            <div class="form-grid">
+            <div class="form-group">
 
                 <div class="campo">
-                    <label>Nome da Editora:</label>
+                    <label>Nome da Categoria:</label>
                     <input type="text" name="nome" required>
-                </div>
-
-                <div class="campo">
-                    <label>Endereço:</label>
-                    <input type="text" name="endereco">
-                </div>
-
-                <div class="campo">
-                    <label>Cidade:</label>
-                    <input type="text" name="cidade">
                 </div>
 
             </div>
 
             <div class="btn-area">
-                <button class="btn-add">Adicionar Editora</button>
+                <button class="btn-add">Adicionar Categoria</button>
             </div>
 
         </form>

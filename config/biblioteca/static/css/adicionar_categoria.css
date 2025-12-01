@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap');
+
+body {
+    font-family: 'Lexend', sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+}
+
+/* Botão voltar */
+.back-btn {
+    position: absolute;
+    top: 25px;
+    left: 30px;
+    font-size: 26px;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    opacity: 0.7;
+}
+
+/* Cabeçalho */
+.top-header {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.logo {
+    width: 90px;
+}
+
+.titulo {
+    margin-top: 5px;
+    font-size: 32px;
+    color: #003b4a;
+    font-weight: 700;
+}
+
+/* Card container */
+.container {
+    background: white;
+    width: 70%;
+    margin: 40px auto;
+    padding: 45px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+}
+
+.input {
+    width: 100%;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+}
+
+.form-group {
+    width: 100%;
+    max-width: 350px;
+}
+
+/* Campo */
+.campo label {
+    font-size: 14px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.campo input {
+    width: 90%;
+    padding: 10px 12px;
+    border: 1px solid #BAD7E3;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.campo input:focus {
+    border-color: #0e9c99;
+    box-shadow: 0 0 5px rgba(14,156,153,0.4);
+}
+
+/* Botão */
+.btn-area {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.btn-add {
+    background: #0e9c99;
+    color: white;
+    border: none;
+    padding: 10px 35px;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    background: #087d7a;
+}

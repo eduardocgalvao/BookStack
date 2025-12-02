@@ -11,6 +11,9 @@
 
   <body>
     <header class="top-header">
+
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
       <a href="/inicial/#" class="back-btn">←</a>
       <img
         src="{% static 'img/logo.png' %}"
@@ -24,7 +27,7 @@
       <form class="form">
         <div class="form-group">
           <label>Título:</label>
-          <input type="text" name="titulo" />
+          {{ form.titulo }}
         </div>
 
         <div class="form-group">
@@ -34,7 +37,7 @@
 
         <div class="form-group">
           <label>ISBN:</label>
-          <input type="text" name="isbn" />
+          {{ form.isbn }}
         </div>
 
         <div class="form-group">
@@ -44,23 +47,22 @@
 
         <div class="form-group">
           <label>Ano de publicação:</label>
-          <input type="number" name="ano_publicacao" />
+          {{ form.ano_publicacao }}
         </div>
 
         <div class="form-group">
           <label>Autores:</label>
-          {{ form.autores}}
+          {{ form.autores }}
         </div>
 
         <div class="form-group full">
           <label>Categorias:</label>
-          {{ form.categorias}}
+          {{ form.categorias }}
         </div>
 
         <div class="btn-area">
           <button type="submit" class="btn-add">Adicionar Livro</button>
         </div>
-      </form>
     </div>
 
     <!-- POP-UP -->
@@ -84,5 +86,18 @@
         document.getElementById("popup").classList.add("hidden");
       }
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('.multi-select').select2({
+        placeholder: "Selecione...",
+        width: '100%'
+    });
+  });
+</script>
+
   </body>
 </html>

@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_select2',
     'biblioteca',
     'django.contrib.admin',
     'django.contrib.auth',

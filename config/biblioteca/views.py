@@ -81,6 +81,7 @@ def adicionar_livro(request):
     GET: Exibe o formulário de criação de livro.
     POST: Processa o formulário e cria o livro no banco de dados.
     """
+   
     if request.method == 'POST':
         form = LivroCreateForm(request.POST)
         if form.is_valid():
@@ -103,7 +104,9 @@ def adicionar_livro(request):
                     livro=livro,
                     categoria=categoria
                 )
+            form.save()
             return redirect('tela_inicial')
+        
     else:
         form = LivroCreateForm()
     
@@ -162,7 +165,7 @@ def adicionar_categoria(request):
 
 # CRIAR LIVRO ----------------------------------------------------------
 class LivroCreateView(View):
-    template_name = "adicionar_livro.html"
+   
 
     def get(self, request):
         form = LivroCreateForm()
@@ -193,14 +196,14 @@ class LivroCreateView(View):
                 livro=livro,
                 categoria=categoria
             )
-
+        form.save()
         return redirect("livro_list")  # Redireciona para a lista de livros após criação
         return render(request, self.template_name,{'form': form})
     
 #CRIAR AUTOR ----------------------------------------------------------
 
 class AutorCreateView(View):
-    template_name = "biblioteca/autor_form.html"
+    template_name = "adicionar_autor.html"
     
     def get(self, request):
         form = AutorForm()
@@ -216,7 +219,7 @@ class AutorCreateView(View):
 # LISTAR AUTORES ------------------------------------------------------
 
 class AutorListView(View):
-    template_name = "biblioteca/autor_list.html"
+    template_name = "adicionar_autor.html"
 
     def get(self, request):
         autores = tbl_autor.objects.all()
@@ -225,7 +228,7 @@ class AutorListView(View):
 # EDITAR AUTOR --------------------------------------------------------
 
 class AutorUpdateView(View):
-    template_name = "biblioteca/autor_form.html"
+    template_name = "adicionar_autor.html"
 
     def get(self, request, pk):
         autor = get_object_or_404(tbl_autor, pk=pk)
@@ -242,7 +245,7 @@ class AutorUpdateView(View):
     
 # DELETAR AUTOR --------------------------------------------------------
 class AutorDeleteView(View):
-    template_name = "biblioteca/autor_confirm_delete.html"
+    template_name = "adicionar_autor.html"
 
     def get(self, request, pk):
         autor = get_object_or_404(tbl_autor, pk=pk)
@@ -256,7 +259,7 @@ class AutorDeleteView(View):
 # LISTAR CATEGORIAS --------------------------------------------------------
 
 class CategoriaListView(View):
-    template_name = "biblioteca/categoria_list.html"
+    template_name = "adicionar_categoria.html"
 
     def get(self, request):
         categorias = tbl_categoria.objects.all()
@@ -266,7 +269,7 @@ class CategoriaListView(View):
 # CRIAR CATEGORIA ----------------------------------------------------------
 
 class CategoriaCreateView(View):
-    template_name = "biblioteca/categoria_form.html"
+    template_name = "adicionar_categoria.html"
 
     def get(self, request):
         form = CategoriaForm()
@@ -283,7 +286,7 @@ class CategoriaCreateView(View):
 # EDITAR CATEGORIA ---------------------------------------------------------
 
 class CategoriaUpdateView(View):
-    template_name = "biblioteca/categoria_form.html"
+    template_name = "adicionar_categoria.html"
 
     def get(self, request, pk):
         categoria = get_object_or_404(tbl_categoria, pk=pk)
@@ -302,7 +305,7 @@ class CategoriaUpdateView(View):
 # DELETAR CATEGORIA --------------------------------------------------------
 
 class CategoriaDeleteView(View):
-    template_name = "biblioteca/categoria_confirm_delete.html"
+    template_name = "adicionar_categoria.html"
 
     def get(self, request, pk):
         categoria = get_object_or_404(tbl_categoria, pk=pk)
@@ -316,7 +319,7 @@ class CategoriaDeleteView(View):
 # LISTAR EDITORAS --------------------------------------------------------
 
 class EditoraListView(View):
-    template_name = "biblioteca/editora_list.html"
+    template_name = "adicionar_editora.html"
 
     def get(self, request):
         editoras = tbl_editora.objects.all()
@@ -326,7 +329,7 @@ class EditoraListView(View):
 # CRIAR EDITORA ----------------------------------------------------------
 
 class EditoraCreateView(View):
-    template_name = "biblioteca/editora_form.html"
+    template_name = "adicionar_editora.html"
 
     def get(self, request):
         form = EditoraForm()
@@ -343,7 +346,7 @@ class EditoraCreateView(View):
 # EDITAR EDITORA ---------------------------------------------------------
 
 class EditoraUpdateView(View):
-    template_name = "biblioteca/editora_form.html"
+    template_name = "adicionar_editora.html"
 
     def get(self, request, pk):
         editora = get_object_or_404(tbl_editora, pk=pk)
@@ -362,7 +365,7 @@ class EditoraUpdateView(View):
 # DELETAR EDITORA ---------------------------------------------------------
 
 class EditoraDeleteView(View):
-    template_name = "biblioteca/editora_confirm_delete.html"
+    template_name = "adicionar_editora.html"
 
     def get(self, request, pk):
         editora = get_object_or_404(tbl_editora, pk=pk)
@@ -376,7 +379,7 @@ class EditoraDeleteView(View):
 # LISTAR STATUS --------------------------------------------------------
 
 class StatusLivroListView(View):
-    template_name = "biblioteca/status_list.html"
+    template_name = "tela_inicial.html"
 
     def get(self, request):
         status_list = tbl_status_livro.objects.all()
@@ -386,7 +389,7 @@ class StatusLivroListView(View):
 # CRIAR STATUS ---------------------------------------------------------
 
 class StatusLivroCreateView(View):
-    template_name = "biblioteca/status_form.html"
+    template_name = "tela_inicial.html"
 
     def get(self, request):
         form = StatusLivroForm()
@@ -403,7 +406,7 @@ class StatusLivroCreateView(View):
 # EDITAR STATUS --------------------------------------------------------
 
 class StatusLivroUpdateView(View):
-    template_name = "biblioteca/status_form.html"
+    template_name = "tela_inicial.html"
 
     def get(self, request, pk):
         status_item = get_object_or_404(tbl_status_livro, pk=pk)
@@ -422,7 +425,7 @@ class StatusLivroUpdateView(View):
 # DELETAR STATUS --------------------------------------------------------
 
 class StatusLivroDeleteView(View):
-    template_name = "biblioteca/status_confirm_delete.html"
+    template_name = "biblioteca/tela_inicial.html"
 
     def get(self, request, pk):
         status_item = get_object_or_404(tbl_status_livro, pk=pk)

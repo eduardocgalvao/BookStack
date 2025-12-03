@@ -46,10 +46,10 @@ from .views import (
 
 urlpatterns = [
     # LOGIN
-    path("login/", login_view, name="login"),
+    path("", login_view, name="login"),
     
     # TELA INICIAL
-    path("", tela_inicial, name="tela_inicial"),
+    path("tela_inicial/", tela_inicial, name="tela_inicial"),
     
     # TODOS OS LIVROS
     path("todosLivros/", tela_todos_livros, name="tela_todos_livros"),

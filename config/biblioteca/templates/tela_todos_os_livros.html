@@ -1,243 +1,242 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Todos os Livros - BookStack</title>
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/tela_todos_os_livros.css' %}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<body>
     <div class="livros-container">
+        <!-- Header com barra de pesquisa -->
+        <header class="top-bar">
+            <a href="{% url 'tela_inicial' %}" class="voltar">← Voltar</a>
+            
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Procurar por nome do livro..." />
+            </div>
+            
+            <img src="{% static 'img/logo.png' %}" class="logo-bookstack" alt="BookStack Logo" />
+        </header>
 
-      <!-- Topo -->
-      <div class="top-bar">
-        <a href="{% url 'tela_inicial' %}" class="voltar">←</a>
+        <!-- Tabela principal de livros -->
+        <main class="card-tabela">
+            <table class="tabela-livros">
+                <thead>
+                    <tr>
+                        <th>Ações</th>
+                        <th>Capa</th>
+                        <th>Título</th>
+                        <th>Ano</th>
+                        <th>Editora</th>
+                        <th>Status</th>
+                        <th>Autores</th>
+                        <th>Categorias</th>
+                        <th>Criado em</th>
+                        <th>Atualizado em</th>
+                    </tr>
+                </thead>
 
-        <div class="search-box">
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Procurar por nome do livro..."
-          />
-        </div>
+                <tbody>
+                    {% for item in livros_com_relacionados %}
+                    {% with livro=item.livro autores_rel=item.autores categorias_rel=item.categorias %}
+                    <tr data-id="{{ livro.id_livro }}">
+                        <!-- Coluna de ações -->
+                        <td class="acoes-cell">
+                            <button class="edit-icon" data-id="{{ livro.id_livro }}" title="Editar">✏️</button>
+                            <button class="delete-icon" data-id="{{ livro.id_livro }}" title="Excluir">🗑️</button>
+                        </td>
 
-        <img src="{% static 'img/logo.png' %}" class="logo-bookstack" />
-      </div>
+                        <!-- Coluna da capa -->
+                        <td>
+                            {% if livro.capa %}
+                                <img src="{{ livro.capa.url }}" alt="Capa de {{ livro.titulo }}" class="capa-livro" />
+                            {% else %}
+                                <div class="sem-capa" title="Livro sem capa">📚</div>
+                            {% endif %}
+                        </td>
 
-      <div class="card-tabela">
-        <table class="tabela-livros">
-          <thead>
-            <tr>
-              <th>Ações</th>
-              <th>Capa</th>
-              <th>Título</th>
-              <th>Ano Publicação</th>
-              <th>Editora</th>
-              <th>Status</th>
-              <th>Autores</th>
-              <th>Categorias</th>
-              <th>Data de Criação</th>
-              <th>Data de Atualização</th>
-            </tr>
-          </thead>
+                        <!-- Informações básicas do livro -->
+                        <td>{{ livro.titulo }}</td>
+                        <td>{{ livro.ano_publicacao|default:"-" }}</td>
+                        <td>{{ livro.editora.nome|default:"-" }}</td>
 
-          <tbody>
-            {% for item in livros_com_relacionados %}
-            {% with livro=item.livro autores_rel=item.autores categorias_rel=item.categorias %}
+                        <!-- Status com badge colorido -->
+                        <td>
+                            <span class="status-badge status-{{ livro.status.descricao|lower|slugify }}">
+                                {{ livro.status.descricao|title }}
+                            </span>
+                        </td>
 
-            <tr data-id="{{ livro.id_livro }}">
-              <!-- Ações -->
-              <td class="acoes-cell">
-                <span class="edit-icon" data-id="{{ livro.id_livro }}">✏️</span>
-                <span class="delete-icon" data-id="{{ livro.id_livro }}">🗑️</span>
-              </td>
+                        <!-- Lista de autores -->
+                        <td>
+                            {% for autor in autores_rel %}
+                                {{ autor.nome }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                -
+                            {% endfor %}
+                        </td>
 
-              <!-- Capa -->
-              <td>
-                {% if livro.capa %}
-                  <img src="{{ livro.capa.url }}" alt="Capa de {{ livro.titulo }}" class="capa-livro" />
-                {% else %}
-                  <div class="sem-capa">Sem Capa</div>
-                {% endif %}
-              </td>
+                        <!-- Lista de categorias -->
+                        <td>
+                            {% for categoria in categorias_rel %}
+                                {{ categoria.nome }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                -
+                            {% endfor %}
+                        </td>
 
-              <!-- Dados -->
-              <td>{{ livro.titulo }}</td>
-              <td>{{ livro.ano_publicacao|default:"-" }}</td>
-              <td>{{ livro.editora.nome|default:"-" }}</td>
-
-              <!-- Status -->
-              <td>
-                <span class="status-badge status-{{ livro.status.descricao|lower }}">
-                  {% if livro.status.descricao == 'ativo' %}
-                    Ativo
-                  {% elif livro.status.descricao == 'inativo' %}
-                    Inativo
-                  {% elif livro.status.descricao == 'emprestado' %}
-                    Emprestado
-                  {% else %}
-                    {{ livro.status.descricao|title }}
-                  {% endif %}
-                </span>
-              </td>
-
-              <!-- Autores -->
-              <td>
-                {% for autor in autores_rel %}
-                  {{ autor.nome }}{% if not forloop.last %}, {% endif %}
-                {% empty %}
-                  -
-                {% endfor %}
-              </td>
-
-              <!-- Categorias -->
-              <td>
-                {% for categoria in categorias_rel %}
-                  {{ categoria.nome }}{% if not forloop.last %}, {% endif %}
-                {% empty %}
-                  -
-                {% endfor %}
-              </td>
-
-              <!-- Datas -->
-              <td>{{ livro.dt_criacao|date:"d/m/Y"|default:"-" }}</td>
-              <td>{{ livro.dt_atualizacao|date:"d/m/Y"|default:"-" }}</td>
-            </tr>
-
-            {% endwith %}
-            {% empty %}
-            <tr>
-              <td colspan="10" style="text-align:center">
-                Nenhum livro cadastrado.
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+                        <!-- Datas de criação e atualização -->
+                        <td>{{ livro.dt_criacao|date:"d/m/Y"|default:"-" }}</td>
+                        <td>{{ livro.dt_atualizacao|date:"d/m/Y"|default:"-" }}</td>
+                    </tr>
+                    {% endwith %}
+                    {% empty %}
+                    <!-- Mensagem quando não há livros -->
+                    <tr>
+                        <td colspan="10" class="empty-message">
+                            Nenhum livro cadastrado no sistema.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </main>
     </div>
 
-    <!-- Modal Editar -->
+    <!-- ========== MODAIS ========== -->
+
+    <!-- Modal de edição -->
     <div id="edit-modal" class="modal hidden">
-      <div class="modal-content">
-        <span class="close-modal">×</span>
-        <h3>Editar Livro</h3>
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h3>Editar Livro</h3>
 
-        <form id="edit-form">
-          {% csrf_token %}
-          <input type="hidden" id="edit-id" name="livro_id" />
+            <form id="edit-form">
+                {% csrf_token %}
+                <input type="hidden" id="edit-id" name="livro_id" />
 
-          <div class="form-grid">
+                <div class="form-grid">
+                    <!-- Campo: Título -->
+                    <div class="campo">
+                        <label>Título:</label>
+                        <input type="text" id="edit-titulo" name="titulo" required />
+                    </div>
 
-            <div class="campo">
-              <label>Título:</label>
-              <input type="text" id="edit-titulo" name="titulo" required />
-            </div>
+                    <!-- Campo: Editora -->
+                    <div class="campo">
+                        <label>Editora:</label>
+                        <select id="edit-editora" name="editora_id">
+                            <option value="">Selecione...</option>
+                            {% for editora in editoras %}
+                                <option value="{{ editora.id_editora }}">{{ editora.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-            <div class="campo">
-              <label>Editora:</label>
-              <select id="edit-editora" name="editora_id">
-                <option value="">Selecione...</option>
-                {% for editora in editoras %}
-                  <option value="{{ editora.id_editora }}">{{ editora.nome }}</option>
-                {% endfor %}
-              </select>
-            </div>
+                    <!-- Campo: Autores - Select2 Multiple -->
+                    <div class="campo">
+                        <label>Autores:</label>
+                        <select id="edit-autores" name="autores_id" multiple="multiple" class="select2-autores">
+                            {% for autor in autores %}
+                                <option value="{{ autor.id_autor }}">{{ autor.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-            <div class="campo">
-              <label>Autores:</label>
-              <select id="edit-autores" name="autores_id" multiple="multiple">
-                {% for autor in autores %}
-                  <option value="{{ autor.id_autor }}">{{ autor.nome }}</option>
-                {% endfor %}
-              </select>
-            </div>
+                    <!-- Campo: Ano de Publicação -->
+                    <div class="campo">
+                        <label>Ano Publicação:</label>
+                        <input type="number" id="edit-ano" name="ano_publicacao" />
+                    </div>
 
-            <div class="campo">
-              <label>Ano Publicação:</label>
-              <input type="number" id="edit-ano" name="ano_publicacao" />
-            </div>
+                    <!-- Campo: Categoria -->
+                    <div class="campo">
+                        <label>Categoria:</label>
+                        <select id="edit-categoria" name="categoria_id">
+                            <option value="">Selecione...</option>
+                            {% for cat in categorias %}
+                                <option value="{{ cat.id_categoria }}">{{ cat.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-            <div class="campo">
-              <label>Categoria:</label>
-              <select id="edit-categoria" name="categoria_id">
-                <option value="">Selecione...</option>
-                {% for cat in categorias %}
-                  <option value="{{ cat.id_categoria }}">{{ cat.nome }}</option>
-                {% endfor %}
-              </select>
-            </div>
+                    <!-- Campo: Status -->
+                    <div class="campo">
+                        <label>Status:</label>
+                        <select id="edit-status" name="status_id">
+                            <option value="">Selecione...</option>
+                            {% for status in status_list %}
+                                <option value="{{ status.id_status }}">{{ status.descricao|title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
 
-            <div class="campo">
-              <label>Status:</label>
-              <select id="edit-status" name="status_id">
-                <option value="">Selecione...</option>
-                {% for status in status_list %}
-                  <option value="{{ status.id_status }}">{{ status.descricao|title }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-          </div>
-
-          <div class="btn-area">
-            <button type="button" class="btn-cancelar">Cancelar</button>
-            <button type="submit" class="btn-salvar">Salvar Alteração</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Modal Excluir -->
-    <div id="delete-modal" class="modal hidden">
-      <div class="modal-content delete-modal">
-        <span class="close-modal">×</span>
-        <h3>Confirmar Exclusão</h3>
-        <p>Tem certeza que deseja excluir este livro?</p>
-        <p id="delete-book-title" class="book-title"></p>
-
-        <div class="modal-buttons">
-          <button class="btn-cancelar">Cancelar</button>
-          <button class="btn-confirmar-exclusao">Excluir</button>
+                <!-- Botões do modal -->
+                <div class="btn-area">
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+                </div>
+            </form>
         </div>
-      </div>
     </div>
 
-    <!-- Variáveis Globais -->
-    <script>
-      window.API_URLS = {
-        livroDetail: '{% url "api_livro_detail" 0 %}'.replace("0/", ""),
-        livroUpdate: '{% url "api_livro_update" 0 %}'.replace("0/", ""),
-        livroDelete: '{% url "api_livro_delete" 0 %}'.replace("0/", "")
-      };
+    <!-- Modal de confirmação de exclusão -->
+    <div id="delete-modal" class="modal hidden">
+        <div class="modal-content delete-modal">
+            <span class="close-modal">×</span>
+            <h3>Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir este livro?</p>
+            <p id="delete-book-title" class="book-title"></p>
 
-      function getCSRFToken() {
-        const csrfInput = document.querySelector("[name=csrfmiddlewaretoken]");
-        return csrfInput ? csrfInput.value : "";
-      }
-    </script>
+            <div class="modal-buttons">
+                <button class="btn-cancelar">Cancelar</button>
+                <button class="btn-confirmar-exclusao">Excluir</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Scripts -->
-    <script src="{% static 'js/todos_livros.js' %}"></script>
+    <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+    
+    <!-- Scripts da aplicação -->
     <script>
-      $(document).ready(function () {
-        $("#edit-autores").select2({
-          width: "100%",
-          placeholder: "Selecione autores",
-          allowClear: true,
-        });
-      });
+        // Configuração global de URLs da API
+        window.API_URLS = {
+            livroDetail: '{% url "api_livro_detail" 0 %}'.replace("0/", ""),
+            livroUpdate: '{% url "api_livro_update" 0 %}'.replace("0/", ""),
+            livroDelete: '{% url "api_livro_delete" 0 %}'.replace("0/", "")
+        };
+
+        // Função auxiliar para obter token CSRF
+        function getCSRFToken() {
+            const csrfInput = document.querySelector("[name=csrfmiddlewaretoken]");
+            return csrfInput ? csrfInput.value : "";
+        }
+
+        // Inicializar Select2 quando o modal for aberto
+        function inicializarSelect2Autores() {
+            $('#edit-autores').select2({
+                width: '100%',
+                placeholder: 'Selecione os autores',
+                allowClear: true,
+                dropdownParent: $('#edit-modal') // Importante: Para funcionar dentro do modal
+            });
+        }
     </script>
 
-  </body>
+    <!-- Script principal da aplicação -->
+    <script src="{% static 'js/todos_livros.js' %}"></script>
+</body>
 </html>

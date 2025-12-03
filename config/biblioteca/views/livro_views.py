@@ -93,18 +93,18 @@ def api_livro_detail(request, livro_id):
         
         # DEBUG: Verificar campos do livro
         print(f"Campos do livro: {[f.name for f in livro._meta.fields]}")
-        print(f"dt_criacao existe? {hasattr(livro, 'dt_criacao')}")
-        if hasattr(livro, 'dt_criacao'):
-            print(f"dt_criacao valor: {livro.dt_criacao}")
         
         # Busca autores
-        autores_ids = tbl_livro_autor.objects.filter(livro=livro).values_list('autor', flat=True)
+        autores_ids = list(tbl_livro_autor.objects.filter(livro=livro).values_list('autor', flat=True))
         autores = list(tbl_autor.objects.filter(id_autor__in=autores_ids))
+        autores_nomes = ', '.join([autor.nome for autor in autores])
         print(f"Autores encontrados: {[a.nome for a in autores]}")
+        print(f"IDs dos autores: {autores_ids}")
         
         # Busca categorias
         categorias_ids = tbl_livro_categoria.objects.filter(livro=livro).values_list('categoria', flat=True)
         categorias = list(tbl_categoria.objects.filter(id_categoria__in=categorias_ids))
+        categorias_nomes = ', '.join([cat.nome for cat in categorias]) if categorias else ''
         print(f"Categorias encontradas: {[c.nome for c in categorias]}")
         
         # Processa categoria_id
@@ -122,8 +122,6 @@ def api_livro_detail(request, livro_id):
             status_value = livro.status.descricao
             print(f"Status: {status_value} (ID: {status_id})")
         
-        print(f"Status valor: {status_value} (ID: {status_id})")
-        
         # Preparar dados
         data = {
             'id': livro.id_livro,
@@ -131,8 +129,9 @@ def api_livro_detail(request, livro_id):
             'ano_publicacao': livro.ano_publicacao,
             'editora': livro.editora.nome if livro.editora else '',
             'editora_id': livro.editora.id_editora if livro.editora else None,
-            'autores': ', '.join([autor.nome for autor in autores]),
-            'categoria': ', '.join([cat.nome for cat in categorias]) if categorias else '',
+            'autores': autores_nomes,  # String com nomes
+            'autores_ids': autores_ids,  # Array de IDs para o Select2 (IMPORTANTE!)
+            'categoria': categorias_nomes,
             'categoria_id': categoria_id,
             'status': status_value,
             'status_id': status_id
@@ -156,6 +155,13 @@ def api_livro_detail(request, livro_id):
                 data['dt_atualizacao'] = ''
         else:
             data['dt_atualizacao'] = ''
+        
+        # Adicionar capa se existir
+        if livro.capa:
+            data['capa_url'] = livro.capa.url
+            data['tem_capa'] = True
+        else:
+            data['tem_capa'] = False
         
         print(f"Dados preparados: {data}")
         return JsonResponse(data)
@@ -191,11 +197,10 @@ def api_livro_update(request, livro_id):
             if 'ano_publicacao' in data:
                 livro.ano_publicacao = data['ano_publicacao']
             if 'status_id' in data:
-                status_value = data['status_id']
                 try:
                     status_obj = tbl_status_livro.objects.get(id_status=data['status_id'])
                     livro.status = status_obj
-                    print(f"Status atualizado para: {status_obj.descricao}(ID: {status_obj.id_status})")  # DEBUG
+                    print(f"Status atualizado para: {status_obj.descricao} (ID: {status_obj.id_status})")
                 except tbl_status_livro.DoesNotExist:
                     return JsonResponse({
                         'success': False, 
@@ -213,9 +218,24 @@ def api_livro_update(request, livro_id):
                         'error': 'Editora não encontrada'
                     }, status=404)
             
-            # Salva para atualizar dt_atualizacao
+            # Salva o livro
             livro.save()
-            print(f"Livro {livro_id} salvo. Status atual: {livro.status}")
+            print(f"Livro {livro_id} salvo.")
+            
+            # Atualiza autores
+            if 'autores_ids' in data:  
+                print(f"Atualizando autores: {data['autores_ids']}")
+                # Remove todos os autores existentes
+                tbl_livro_autor.objects.filter(livro=livro).delete()
+                # Adiciona os novos autores
+                if data['autores_ids'] and len(data['autores_ids']) > 0:
+                    for autor_id in data['autores_ids']:
+                        try:
+                            autor = tbl_autor.objects.get(id_autor=autor_id)
+                            tbl_livro_autor.objects.create(livro=livro, autor=autor)
+                            print(f"Autor adicionado: {autor.nome} (ID: {autor_id})")
+                        except tbl_autor.DoesNotExist:
+                            print(f"Autor ID {autor_id} não encontrado, pulando...")
             
             # Atualiza categorias
             if 'categoria_id' in data and data['categoria_id']:
@@ -230,13 +250,6 @@ def api_livro_update(request, livro_id):
                         'success': False, 
                         'error': 'Categoria não encontrada'
                     }, status=404)
-                    
-            if 'autores_id' in data:
-                tbl_livro_autor.objects.filter(livro=livro).delete()
-                
-                for autor_id in data['autores_id']:
-                    autor = tbl_autor.objects.get(id_autor=autor_id)
-                    tbl_livro_autor.objects.create(livro=livro, autor=autor)
             
             return JsonResponse({
                 'success': True, 
@@ -249,6 +262,7 @@ def api_livro_update(request, livro_id):
                 'error': 'JSON inválido'
             }, status=400)
         except Exception as e:
+            print(f"Erro na atualização: {str(e)}")
             return JsonResponse({
                 'success': False, 
                 'error': str(e)

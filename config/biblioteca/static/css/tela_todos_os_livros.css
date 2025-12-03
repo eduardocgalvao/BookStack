@@ -1,3 +1,4 @@
+/* ========== CONFIGURAÇÕES GERAIS ========== */
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap');
 
 * {
@@ -7,10 +8,7 @@
     font-family: 'Lexend', sans-serif;
 }
 
-img.capa-livro {
-    width: 30px;
-}
-
+/* ========== LAYOUT PRINCIPAL ========== */
 .livros-container {
     width: 100%;
     padding: 20px 40px;
@@ -18,11 +16,13 @@ img.capa-livro {
     min-height: 100vh;
 }
 
+/* Header com barra de pesquisa */
 .top-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
+    gap: 20px;
 }
 
 .voltar {
@@ -31,14 +31,17 @@ img.capa-livro {
     color: #000000;
     font-weight: bold;
     transition: color 0.3s ease;
+    white-space: nowrap;
 }
 
 .voltar:hover {
     color: #017a78;
 }
 
+/* Barra de pesquisa */
 .search-box {
-    width: 40%;
+    flex: 1;
+    max-width: 600px;
 }
 
 .search-box input {
@@ -58,11 +61,13 @@ img.capa-livro {
     box-shadow: 0 2px 8px rgba(1, 156, 153, 0.2);
 }
 
+/* Logo */
 .logo-bookstack {
     width: 80px;
     height: auto;
 }
 
+/* ========== TABELA DE LIVROS ========== */
 .card-tabela {
     background: white;
     margin: 0 auto;
@@ -80,6 +85,7 @@ img.capa-livro {
     min-width: 1200px;
 }
 
+/* Cabeçalho da tabela */
 .tabela-livros thead tr {
     background: #019c99;
     color: white;
@@ -93,8 +99,10 @@ img.capa-livro {
     white-space: nowrap;
 }
 
+/* Linhas da tabela */
 .tabela-livros tbody tr {
     transition: background-color 0.2s ease;
+    border-bottom: 1px solid #eaeaea;
 }
 
 .tabela-livros tbody tr:hover {
@@ -103,46 +111,10 @@ img.capa-livro {
 
 .tabela-livros tbody td {
     padding: 15px 12px;
-    border-bottom: 1px solid #eaeaea;
     vertical-align: top;
 }
 
-.tabela-livros th:first-child,
-.tabela-livros td:first-child {
-    width: 100px;
-    text-align: center;
-}
-
-/* Estilos para badges de status */
-.status-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.status-ativo {
-    background-color: #d1fae5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
-}
-
-.status-inativo {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
-}
-
-.status-emprestado {
-    background-color: #fef3c7;
-    color: #92400e;
-    border: 1px solid #fde68a;
-}
-
-/* Estilos para ações */
+/* Coluna de ações */
 .acoes-cell {
     display: flex;
     gap: 10px;
@@ -161,21 +133,124 @@ img.capa-livro {
     justify-content: center;
     width: 36px;
     height: 36px;
+    background: none;
+    border: 1px solid transparent;
 }
 
 .edit-icon:hover {
     background-color: #e3f2fd;
     color: #019c99;
-    transform: scale(1.1);
+    border-color: #019c99;
 }
 
 .delete-icon:hover {
     background-color: #ffebee;
     color: #d32f2f;
-    transform: scale(1.1);
+    border-color: #d32f2f;
 }
 
-/* MODAL */
+/* Imagem da capa */
+.capa-livro {
+    width: 30px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.sem-capa {
+    width: 30px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    border-radius: 4px;
+    border: 1px dashed #ccc;
+    color: #999;
+    font-size: 12px;
+}
+
+/* ========== BADGES DE STATUS ========== */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* Cores para diferentes status */
+.status-ativo {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.status-inativo {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.status-emprestado {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+/* Mensagem de tabela vazia */
+.empty-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-style: italic;
+    background: #fafafa;
+}
+
+/* ========== SELECT2 CUSTOMIZAÇÃO ========== */
+.select2-container--default .select2-selection--multiple {
+    border: 1px solid #ddd !important;
+    border-radius: 6px !important;
+    min-height: 44px !important;
+    padding: 3px !important;
+}
+
+.select2-container--default .select2-selection--multiple:focus {
+    border-color: #019c99 !important;
+    box-shadow: 0 0 0 3px rgba(1, 156, 153, 0.1) !important;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #019c99 !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #e3f2fd !important;
+    border: 1px solid #019c99 !important;
+    border-radius: 4px !important;
+    color: #019c99 !important;
+    font-size: 12px !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #019c99 !important;
+    margin-right: 5px !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #017a78 !important;
+}
+
+/* Ajuste para Select2 dentro do modal */
+.select2-container {
+    z-index: 10000 !important;
+}
+
+/* ========== MODAIS ========== */
 .modal {
     position: fixed;
     top: 0;
@@ -197,11 +272,7 @@ img.capa-livro {
     visibility: visible;
 }
 
-.modal.hidden {
-    opacity: 0;
-    visibility: hidden;
-}
-
+/* Conteúdo do modal */
 .modal-content {
     background: white;
     width: 80%;
@@ -212,12 +283,14 @@ img.capa-livro {
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
     transform: translateY(-20px);
     transition: transform 0.3s ease;
+    z-index: 1000;
 }
 
 .modal:not(.hidden) .modal-content {
     transform: translateY(0);
 }
 
+/* Botão de fechar modal */
 .close-modal {
     position: absolute;
     top: 20px;
@@ -225,13 +298,15 @@ img.capa-livro {
     font-size: 28px;
     cursor: pointer;
     color: #666;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
     width: 30px;
     height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+    background: none;
+    border: none;
 }
 
 .close-modal:hover {
@@ -239,6 +314,7 @@ img.capa-livro {
     background-color: #f5f5f5;
 }
 
+/* Título do modal */
 .modal-content h3 {
     color: #019c99;
     margin-bottom: 25px;
@@ -247,7 +323,7 @@ img.capa-livro {
     text-align: center;
 }
 
-/* GRID do formulário */
+/* ========== FORMULÁRIO DE EDIÇÃO ========== */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -295,7 +371,14 @@ img.capa-livro {
     padding-right: 40px;
 }
 
-/* Botões do modal */
+/* Estilo específico para select de autores (Select2) */
+.campo select.select2-autores {
+    padding: 12px 15px;
+    height: auto;
+    min-height: 44px;
+}
+
+/* ========== BOTÕES ========== */
 .btn-area {
     margin-top: 40px;
     display: flex;
@@ -304,7 +387,8 @@ img.capa-livro {
 }
 
 .btn-salvar,
-.btn-cancelar {
+.btn-cancelar,
+.btn-confirmar-exclusao {
     padding: 12px 30px;
     border-radius: 6px;
     font-size: 14px;
@@ -314,6 +398,7 @@ img.capa-livro {
     border: none;
 }
 
+/* Botão primário (salvar) */
 .btn-salvar {
     background: #019c99;
     color: white;
@@ -325,6 +410,7 @@ img.capa-livro {
     box-shadow: 0 4px 12px rgba(1, 156, 153, 0.2);
 }
 
+/* Botão secundário (cancelar) */
 .btn-cancelar {
     background: #f5f5f5;
     color: #666;
@@ -336,7 +422,7 @@ img.capa-livro {
     color: #333;
 }
 
-/* ============ MODAL DE EXCLUSÃO ============ */
+/* ========== MODAL DE EXCLUSÃO ========== */
 .delete-modal {
     max-width: 500px;
     width: 90%;
@@ -377,16 +463,10 @@ img.capa-livro {
     margin-top: 30px;
 }
 
+/* Botão de confirmação de exclusão */
 .btn-confirmar-exclusao {
-    padding: 12px 30px;
     background-color: #f44336;
     color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s ease;
 }
 
 .btn-confirmar-exclusao:hover {
@@ -395,15 +475,9 @@ img.capa-livro {
     box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
 }
 
-/* Estilo para mensagem de tabela vazia */
-.tabela-livros tbody tr td[colspan] {
-    text-align: center;
-    padding: 40px 20px;
-    color: #666;
-    font-style: italic;
-}
+/* ========== RESPONSIVIDADE ========== */
 
-/* Responsividade */
+/* Tablets grandes e laptops pequenos */
 @media (max-width: 1200px) {
     .livros-container {
         padding: 20px;
@@ -413,25 +487,18 @@ img.capa-livro {
         padding: 20px;
         border-radius: 10px;
     }
-    
-    .tabela-livros {
-        font-size: 13px;
-    }
 }
 
+/* Tablets */
 @media (max-width: 992px) {
     .top-bar {
         flex-direction: column;
-        gap: 20px;
+        text-align: center;
     }
     
     .search-box {
         width: 100%;
         max-width: 500px;
-    }
-    
-    .logo-bookstack {
-        margin-right: 0;
     }
     
     .modal-content {
@@ -445,6 +512,7 @@ img.capa-livro {
     }
 }
 
+/* Celulares grandes */
 @media (max-width: 768px) {
     .form-grid {
         grid-template-columns: 1fr;
@@ -465,29 +533,40 @@ img.capa-livro {
     .btn-confirmar-exclusao {
         width: 100%;
     }
+    
+    /* Melhor legibilidade em telas pequenas */
+    .tabela-livros {
+        font-size: 13px;
+    }
+    
+    .tabela-livros thead th,
+    .tabela-livros tbody td {
+        padding: 10px 8px;
+    }
+    
+    /* Ajuste Select2 para mobile */
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        font-size: 11px !important;
+        padding: 2px 6px !important;
+    }
 }
 
-element.style {
-    width: 100%;
-}
-.select2-container--default .select2-search--inline .select2-search__field {
-    background: transparent;
-    border: none;
-    outline: 0;
-    box-shadow: none;
-}
-.select2-container .select2-search--inline .select2-search__field {
-    box-sizing: border-box;
-    border: none;
-    font-size: 100%;
-    margin-top: 5px;
-    margin-left: 5px;
-    padding: 0;
-    max-width: 100%;
-    resize: none;
-    height: 18px;
-    vertical-align: bottom;
-    font-family: sans-serif;
-    overflow: hidden;
-    word-break: keep-all;
+/* Celulares pequenos */
+@media (max-width: 480px) {
+    .livros-container {
+        padding: 10px;
+    }
+    
+    .card-tabela {
+        padding: 15px;
+    }
+    
+    .modal-content {
+        padding: 20px 15px;
+    }
+    
+    .status-badge {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
 }

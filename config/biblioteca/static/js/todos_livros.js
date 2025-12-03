@@ -1,4 +1,4 @@
-// todos_livros.js - VERSÃO CORRIGIDA
+// todos_livros.js - Script atualizado
 console.log("Script todos_livros.js carregado");
 
 // Configuração do CSRF para AJAX
@@ -19,11 +19,10 @@ function getCookie(name) {
 
 const csrftoken = getCookie('csrftoken');
 
-// DEBUG: Verifique se as URLs estão corretas
 console.log("API_URLS:", window.API_URLS);
 console.log("CSRF Token:", csrftoken ? "Encontrado" : "Não encontrado");
 
-// Funções AJAX com tratamento de erro melhorado
+// Funções AJAX
 async function fetchLivro(id) {
     console.log(`Buscando livro ID: ${id}`);
     try {
@@ -127,12 +126,33 @@ async function deleteLivro(id) {
 // Variáveis para controle
 let livroParaExcluir = null;
 let livroParaEditar = null;
+let autoresSelect2Instance = null;
 
-// Verifica se os elementos existem antes de adicionar event listeners
+// Configuração dos eventos quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM carregado, configurando eventos...");
     
-    // Abre o modal de edição
+    // ========== FUNÇÃO: INICIALIZAR SELECT2 PARA AUTORES ==========
+    function inicializarSelect2Autores() {
+        if (!autoresSelect2Instance && $('#edit-autores').length) {
+            autoresSelect2Instance = $('#edit-autores').select2({
+                width: '100%',
+                placeholder: 'Selecione os autores',
+                allowClear: true,
+                dropdownParent: $('#edit-modal')
+            });
+            console.log("Select2 inicializado para autores");
+        }
+    }
+    
+    // ========== FUNÇÃO: LIMPAR SELECT2 QUANDO MODAL FECHAR ==========
+    function limparSelect2Autores() {
+        if (autoresSelect2Instance) {
+            autoresSelect2Instance.val(null).trigger('change');
+        }
+    }
+    
+    // ========== EVENTO: ABRIR MODAL DE EDIÇÃO ==========
     const editIcons = document.querySelectorAll(".edit-icon");
     console.log(`Encontrados ${editIcons.length} ícones de edição`);
     
@@ -150,10 +170,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("edit-id").value = livro.id;
                 document.getElementById("edit-titulo").value = livro.titulo || '';
                 document.getElementById("edit-editora").value = livro.editora_id || '';
-                document.getElementById("edit-autores").value = livro.autores_id || '';
                 document.getElementById("edit-ano").value = livro.ano_publicacao || '';
                 document.getElementById("edit-categoria").value = livro.categoria_id || '';
-                document.getElementById("edit-status").value = livro.status_id || 'ativo';
+                document.getElementById("edit-status").value = livro.status_id || '';
+                
+                // Inicializa Select2 se ainda não foi
+                inicializarSelect2Autores();
+                
+                // Preenche os autores no Select2 usando os IDs
+                // AGORA usando 'autores_ids' (plural)
+                if (livro.autores_ids && Array.isArray(livro.autores_ids)) {
+                    $('#edit-autores').val(livro.autores_ids).trigger('change');
+                    console.log("Autores preenchidos:", livro.autores_ids);
+                } else {
+                    console.log("Nenhum autor encontrado ou formato inválido");
+                    $('#edit-autores').val(null).trigger('change');
+                }
                 
                 // Abre o modal
                 document.getElementById("edit-modal").classList.remove("hidden");
@@ -164,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Abre o modal de exclusão
+    // ========== EVENTO: ABRIR MODAL DE EXCLUSÃO ==========
     const deleteIcons = document.querySelectorAll(".delete-icon");
     console.log(`Encontrados ${deleteIcons.length} ícones de exclusão`);
     
@@ -188,16 +220,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Fecha modais
+    // ========== FUNÇÃO: FECHAR TODOS OS MODAIS ==========
     function closeAllModals() {
         document.querySelectorAll(".modal").forEach(modal => {
             modal.classList.add("hidden");
         });
         livroParaExcluir = null;
         livroParaEditar = null;
+        limparSelect2Autores();
         console.log("Todos os modais fechados");
     }
 
+    // ========== EVENTO: FECHAR MODAIS ==========
     const closeButtons = document.querySelectorAll(".close-modal, .btn-cancelar");
     console.log(`Encontrados ${closeButtons.length} botões de fechar`);
     
@@ -205,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener("click", closeAllModals);
     });
 
-    // Fecha modais ao clicar fora
+    // ========== EVENTO: FECHAR MODAL AO CLICAR FORA ==========
     document.querySelectorAll(".modal").forEach((modal) => {
         modal.addEventListener("click", (e) => {
             if (e.target.classList.contains("modal")) {
@@ -214,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Submissão do formulário de edição
+    // ========== EVENTO: SUBMIT DO FORMULÁRIO DE EDIÇÃO ==========
     const editForm = document.getElementById("edit-form");
     if (editForm) {
         console.log("Formulário de edição encontrado");
@@ -227,13 +261,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            // Pega os autores selecionados no Select2
+            const autoresSelecionados = $('#edit-autores').val() || [];
+            console.log("Autores selecionados:", autoresSelecionados);
+            
+            // IMPORTANTE: Agora use 'autores_ids' (plural)
             const formData = {
                 titulo: document.getElementById("edit-titulo").value,
-                editora: document.getElementById("edit-editora").value,
-                autores: document.getElementById("edit-autores").value,
+                editora_id: document.getElementById("edit-editora").value,
                 ano_publicacao: document.getElementById("edit-ano").value,
                 categoria_id: document.getElementById("edit-categoria").value,
-                status_id: document.getElementById("edit-status").value
+                status_id: document.getElementById("edit-status").value,
+                autores_ids: autoresSelecionados // Use 'autores_ids' (plural) aqui!
             };
             
             console.log("Dados para atualizar:", formData);
@@ -255,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Formulário de edição NÃO encontrado!");
     }
 
-    // Confirma exclusão
+    // ========== EVENTO: CONFIRMAR EXCLUSÃO ==========
     const confirmDeleteBtn = document.querySelector(".btn-confirmar-exclusao");
     if (confirmDeleteBtn) {
         confirmDeleteBtn.addEventListener("click", async () => {
@@ -281,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Busca em tempo real
+    // ========== EVENTO: BUSCA EM TEMPO REAL ==========
     const searchInput = document.getElementById("search-input");
     if (searchInput) {
         searchInput.addEventListener("input", function(e) {
@@ -305,13 +344,3 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log("Configuração de eventos concluída");
 });
-
-const autoresNomes =  data.autores.split(",").filter(a => a.trim() !== "");
-
-$("#edit-autores option").each(function() {
-    if (autoresNomes.includes($(this).text().trim())) {
-        $(this).prop("selected", true);
-    }
-});
-
-$("#edit-autores").trigger("change");

@@ -6,7 +6,7 @@ from django.views.decorators.http import require_http_methods
 from django.views import View
 import json
 from ..forms import LivroCreateForm, LivroAutorForm, LivroCategoriaForm
-from ..models import tbl_livro, tbl_livro_autor, tbl_livro_categoria, tbl_editora, tbl_autor, tbl_categoria
+from ..models import tbl_livro, tbl_livro_autor, tbl_livro_categoria, tbl_editora, tbl_autor, tbl_categoria, tbl_status_livro
 
 
 class LivroCreateView(View):
@@ -16,15 +16,24 @@ class LivroCreateView(View):
     def get(self, request):
         form = LivroCreateForm()
         editoras = tbl_editora.objects.all()
-        return render(request, self.template_name, {"form": form, "editoras": editoras})
+        status_list = tbl_status_livro.objects.filter(ativo=True)
+        return render(request, self.template_name, {
+            "form": form, 
+            "editoras": editoras, 
+            "status_list": status_list})
 
     def post(self, request):
         form = LivroCreateForm(request.POST)
         editoras = tbl_editora.objects.all()
-
+        status_list = tbl_status_livro.objects.filter(ativo=True)
+        
         if not form.is_valid():
             print(form.errors)
-            return render(request, self.template_name, {"form": form, "editoras": editoras})
+            return render(request, self.template_name, {
+                "form": form, 
+                "editoras": editoras,
+                "status_list": status_list
+                })
 
         # Cria o livro
         livro = tbl_livro.objects.create(
@@ -46,6 +55,7 @@ class LivroCreateView(View):
         return render(request, self.template_name, {
             "form": LivroCreateForm(), 
             "editoras": editoras,
+            "status_list": status_list,
             "sucesso": True,
             "livro_id": livro.id_livro,
             "livro_nome": livro.titulo
@@ -54,7 +64,7 @@ class LivroCreateView(View):
 
 def tela_todos_livros(request):
     """Exibe uma lista de todos os livros disponíveis na biblioteca."""
-    livros = tbl_livro.objects.all().select_related('editora')
+    livros = tbl_livro.objects.all().select_related('editora', 'status')
     
     livros_com_relacionados = []
     for livro in livros:
@@ -73,10 +83,14 @@ def tela_todos_livros(request):
         })
     
     todas_categorias = tbl_categoria.objects.all()
+    todas_editoras = tbl_editora.objects.all()
+    #todos_status = tbl_status_livro.objects.filter(ativo=True)
     
     return render(request, 'tela_todos_os_livros.html', {
         'livros_com_relacionados': livros_com_relacionados,
-        'categorias': todas_categorias
+        'categorias': todas_categorias,
+        'editoras': todas_editoras,
+        "status_list": tbl_status_livro.objects.filter(ativo=True)
     })
 
 
@@ -112,18 +126,16 @@ def api_livro_detail(request, livro_id):
             categoria_id = categorias[0].id_categoria
             print(f"Categoria ID selecionada: {categoria_id}")
         
+        # Processa status
+        status_id = None
         status_value = ''
-        if hasattr(livro, 'status'):
-            if hasattr(livro.status, 'descricao'):  # Se for objeto com campo descricao
-                status_value = livro.status.descricao
-            elif hasattr(livro.status, 'nome'):  # Se for objeto com campo nome
-                status_value = livro.status.nome
-            elif hasattr(livro.status, 'status'):  # Se for objeto com campo status
-                status_value = livro.status.status
-            else:
-                status_value = str(livro.status)
         
-        print(f"Status valor: {status_value}")
+        if livro.status and hasattr(livro.status, 'id_status'):
+            status_id = livro.status.id_status
+            status_value = livro.status.descricao
+            print(f"Status: {status_value} (ID: {status_id})")
+        
+        print(f"Status valor: {status_value} (ID: {status_id})")
         
         # Preparar dados
         data = {
@@ -136,6 +148,7 @@ def api_livro_detail(request, livro_id):
             'categoria': ', '.join([cat.nome for cat in categorias]) if categorias else '',
             'categoria_id': categoria_id,
             'status': status_value,
+            'status_id': status_id
         }
         
         # Adicionar datas com verificação segura
@@ -183,15 +196,24 @@ def api_livro_update(request, livro_id):
             data = json.loads(request.body)
             livro = get_object_or_404(tbl_livro, id_livro=livro_id)
             
+            print(f"Dados recebidos para atualização: {data}")  # DEBUG
+            
             # Atualiza campos básicos
             if 'titulo' in data:
                 livro.titulo = data['titulo']
             if 'ano_publicacao' in data:
                 livro.ano_publicacao = data['ano_publicacao']
-            if 'status' in data:
-                status_value = data['status']
-            if hasattr(livro, 'status') and not hasattr(livro.status, 'descricao'):
-                livro.status = status_value
+            if 'status_id' in data:
+                status_value = data['status_id']
+                try:
+                    status_obj = tbl_status_livro.objects.get(id_status=data['status_id'])
+                    livro.status = status_obj
+                    print(f"Status atualizado para: {status_obj.descricao}(ID: {status_obj.id_status})")  # DEBUG
+                except tbl_status_livro.DoesNotExist:
+                    return JsonResponse({
+                        'success': False, 
+                        'error': 'Status não encontrado'
+                    }, status=404)
             
             # Atualiza editora se for enviado editora_id
             if 'editora_id' in data and data['editora_id']:
@@ -206,6 +228,7 @@ def api_livro_update(request, livro_id):
             
             # Salva para atualizar dt_atualizacao
             livro.save()
+            print(f"Livro {livro_id} salvo. Status atual: {livro.status}")
             
             # Atualiza categorias - CORREÇÃO: Use id_categoria em vez de id
             if 'categoria_id' in data and data['categoria_id']:

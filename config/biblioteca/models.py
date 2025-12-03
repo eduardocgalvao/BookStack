@@ -36,6 +36,12 @@ class tbl_status_livro(models.Model):
     """Define os possíveis status de um livro (ativo, inativo, removido, etc)."""
     id_status = models.AutoField(primary_key=True)
     descricao = models.CharField(max_length=255)
+    ativo = models.BooleanField(default=True)
+    
+    class Meta:
+        db_table = "tbl_status_livro"
+        verbose_name = "Status do Livro"
+        verbose_name_plural = "Status dos Livros"
 
     def __str__(self):
         return self.descricao

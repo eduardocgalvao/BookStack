@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("edit-autores").value = livro.autores || '';
                 document.getElementById("edit-ano").value = livro.ano_publicacao || '';
                 document.getElementById("edit-categoria").value = livro.categoria_id || '';
-                document.getElementById("edit-status").value = livro.status || 'ativo';
+                document.getElementById("edit-status").value = livro.status_id || 'ativo';
                 
                 // Abre o modal
                 document.getElementById("edit-modal").classList.remove("hidden");
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 autores: document.getElementById("edit-autores").value,
                 ano_publicacao: document.getElementById("edit-ano").value,
                 categoria_id: document.getElementById("edit-categoria").value,
-                status: document.getElementById("edit-status").value
+                status_id: document.getElementById("edit-status").value
             };
             
             console.log("Dados para atualizar:", formData);

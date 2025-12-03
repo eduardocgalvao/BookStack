@@ -1,181 +1,187 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todos os Livros - BookStack</title>
-    <link rel="stylesheet" href="{% static 'css/tela_todos_os_livros.css' %}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
-</head>
-<body>
-    <div class="livros-container">
-        <div class="top-bar">
-            <a href="{% url 'tela_inicial' %}" class="voltar">←</a>
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="Procurar por nome do livro..." />
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Todos os Livros - BookStack</title>
+        <link rel="stylesheet" href="{% static 'css/tela_todos_os_livros.css' %}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+        href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap"
+        rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="livros-container">
+            <div class="top-bar">
+                <a href="{% url 'tela_inicial' %}" class="voltar">←</a>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Procurar por nome do livro..." />
+                </div>
+                <img src="{% static 'img/logo.png' %}" class="logo-bookstack" />
             </div>
-            <img src="{% static 'img/logo.png' %}" class="logo-bookstack" />
+
+            <div class="card-tabela">
+                <table class="tabela-livros">
+                    <thead>
+                        <tr>
+                            <th>Ações</th>
+                            <th>Título</th>
+                            <th>Ano Publicação</th>
+                            <th>Editora</th>
+                            <th>Status</th>
+                            <th>Autores</th>
+                            <th>Categorias</th>
+                            <th>Data de Criação</th>
+                            <th>Data de Atualização</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in livros_com_relacionados %}
+                        {% with livro=item.livro autores=item.autores categorias=item.categorias %}
+                        <tr data-id="{{ livro.id_livro }}">
+                            <td class="acoes-cell">
+                                <span class="edit-icon" data-id="{{ livro.id_livro }}">✏️</span>
+                                <span class="delete-icon" data-id="{{ livro.id_livro }}">🗑️</span>
+                            </td>
+                            <td>{{ livro.titulo }}</td>
+                            <td>{{ livro.ano_publicacao|default:"-" }}</td>
+                            <td>{{ livro.editora.nome|default:"-" }}</td>
+                            <td>
+                                <span class="status-badge status-{{ livro.status.descricao|lower }}">
+                                    {% if livro.status.descricao == 'ativo' %}Ativo
+                                    {% elif livro.status.descricao == 'inativo' %}Inativo
+                                    {% elif livro.status.descricao == 'emprestado' %}Emprestado
+                                    {% else %}{{ livro.status.descricao|title }}
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                {% for autor in autores %}
+                                    {{ autor.nome }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    -
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for categoria in categorias %}
+                                    {{ categoria.nome }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    -
+                                {% endfor %}
+                            </td>
+                            <td>{{ livro.dt_criacao|date:"d/m/Y"|default:"-" }}</td>
+                            <td>{{ livro.dt_atualizacao|date:"d/m/Y"|default:"-" }}</td>
+                        </tr>
+                        {% endwith %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" style="text-align: center;">Nenhum livro cadastrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="card-tabela">
-            <table class="tabela-livros">
-                <thead>
-                    <tr>
-                        <th>Ações</th>
-                        <th>Título</th>
-                        <th>Ano Publicação</th>
-                        <th>Editora</th>
-                        <th>Status</th>
-                        <th>Autores</th>
-                        <th>Categorias</th>
-                        <th>Data de Criação</th>
-                        <th>Data de Atualização</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for item in livros_com_relacionados %}
-                    {% with livro=item.livro autores=item.autores categorias=item.categorias %}
-                    <tr data-id="{{ livro.id_livro }}">
-                        <td class="acoes-cell">
-                            <span class="edit-icon" data-id="{{ livro.id_livro }}">✏️</span>
-                            <span class="delete-icon" data-id="{{ livro.id_livro }}">🗑️</span>
-                        </td>
-                        <td>{{ livro.titulo }}</td>
-                        <td>{{ livro.ano_publicacao|default:"-" }}</td>
-                        <td>{{ livro.editora.nome|default:"-" }}</td>
-                        <td>
-                            <span class="status-badge status-{{ livro.status|lower }}">
-                                {% if livro.status == 'ativo' %}Ativo
-                                {% elif livro.status == 'inativo' %}Inativo
-                                {% elif livro.status == 'emprestado' %}Emprestado
-                                {% else %}{{ livro.status|title }}
-                                {% endif %}
-                            </span>
-                        </td>
-                        <td>
-                            {% for autor in autores %}
-                                {{ autor.nome }}{% if not forloop.last %}, {% endif %}
-                            {% empty %}
-                                -
-                            {% endfor %}
-                        </td>
-                        <td>
-                            {% for categoria in categorias %}
-                                {{ categoria.nome }}{% if not forloop.last %}, {% endif %}
-                            {% empty %}
-                                -
-                            {% endfor %}
-                        </td>
-                        <td>{{ livro.dt_criacao|date:"d/m/Y"|default:"-" }}</td>
-                        <td>{{ livro.dt_atualizacao|date:"d/m/Y"|default:"-" }}</td>
-                    </tr>
-                    {% endwith %}
-                    {% empty %}
-                    <tr>
-                        <td colspan="9" style="text-align: center;">Nenhum livro cadastrado.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Modal de edição -->
-    <div id="edit-modal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-modal">×</span>
-            <h3>Editar Livro</h3>
-            
-            <form id="edit-form">
-                {% csrf_token %}
-                <input type="hidden" id="edit-id" name="livro_id">
+        <!-- Modal de edição -->
+        <div id="edit-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-modal">×</span>
+                <h3>Editar Livro</h3>
                 
-                <div class="form-grid">
-                    <div class="campo">
-                        <label>Título:</label>
-                        <input type="text" id="edit-titulo" name="titulo" required />
+                <form id="edit-form">
+                    {% csrf_token %}
+                    <input type="hidden" id="edit-id" name="livro_id">
+                    
+                    <div class="form-grid">
+                        <div class="campo">
+                            <label>Título:</label>
+                            <input type="text" id="edit-titulo" name="titulo" required />
+                        </div>
+
+                        <div class="campo">
+                            <label>Editora:</label>
+                            <select id="edit-editora" name="editora" />
+                                <option value="">Selecione...</option>
+                                {% for editora in editoras %}
+                                <option value="{{ editora.id_editora }}">{{ editora.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="campo">
+                            <label>Autores:</label>
+                            <input type="text" id="edit-autores" name="autores" readonly />
+                        </div>
+
+                        <div class="campo">
+                            <label>Ano Publicação:</label>
+                            <input type="number" id="edit-ano" name="ano_publicacao" />
+                        </div>
+
+                        <div class="campo">
+                            <label>Categoria:</label>
+                            <select id="edit-categoria" name="categoria_id">
+                                <option value="">Selecione...</option>
+                                {% for cat in categorias %}
+                                <option value="{{ cat.id_categoria }}">{{ cat.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="campo">
+                            <label>Status:</label>
+                            <select id="edit-status" name="status_id">
+                                <option value="">Selecione...</option>
+                                {% for status in status_list %}
+                                <option value="{{ status.id_status }}">{{ status.descricao|title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="campo">
-                        <label>Editora:</label>
-                        <input type="text" id="edit-editora" name="editora" />
+                    <div class="btn-area">
+                        <button type="button" class="btn-cancelar">Cancelar</button>
+                        <button type="submit" class="btn-salvar">Salvar Alteração</button>
                     </div>
-
-                    <div class="campo">
-                        <label>Autores:</label>
-                        <input type="text" id="edit-autores" name="autores" />
-                    </div>
-
-                    <div class="campo">
-                        <label>Ano Publicação:</label>
-                        <input type="number" id="edit-ano" name="ano_publicacao" />
-                    </div>
-
-                    <div class="campo">
-                        <label>Categoria:</label>
-                        <select id="edit-categoria" name="categoria_id">
-                            <option value="">Selecione...</option>
-                            {% for cat in categorias %}
-                            <option value="{{ cat.id_categoria }}">{{ cat.nome }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="campo">
-                        <label>Status:</label>
-                        <select id="edit-status" name="status">
-                            <option value="ativo">Ativo</option>
-                            <option value="inativo">Inativo</option>
-                            <option value="emprestado">Emprestado</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="btn-area">
-                    <button type="button" class="btn-cancelar">Cancelar</button>
-                    <button type="submit" class="btn-salvar">Salvar Alteração</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal de confirmação para excluir -->
-    <div id="delete-modal" class="modal hidden">
-        <div class="modal-content delete-modal">
-            <span class="close-modal">×</span>
-            <h3>Confirmar Exclusão</h3>
-            <p>Tem certeza que deseja excluir este livro?</p>
-            <p id="delete-book-title" class="book-title"></p>
-            <div class="modal-buttons">
-                <button class="btn-cancelar">Cancelar</button>
-                <button class="btn-confirmar-exclusao">Excluir</button>
+                </form>
             </div>
         </div>
-    </div>
 
-    <!-- Script de inicialização -->
-    <script>
-        // Inicializa variáveis globais
-        window.API_URLS = {
-            livroDetail: '{% url "api_livro_detail" 0 %}'.replace('0/', ''),
-            livroUpdate: '{% url "api_livro_update" 0 %}'.replace('0/', ''),
-            livroDelete: '{% url "api_livro_delete" 0 %}'.replace('0/', ''),
-        };
+        <!-- Modal de confirmação para excluir -->
+        <div id="delete-modal" class="modal hidden">
+            <div class="modal-content delete-modal">
+                <span class="close-modal">×</span>
+                <h3>Confirmar Exclusão</h3>
+                <p>Tem certeza que deseja excluir este livro?</p>
+                <p id="delete-book-title" class="book-title"></p>
+                <div class="modal-buttons">
+                    <button class="btn-cancelar">Cancelar</button>
+                    <button class="btn-confirmar-exclusao">Excluir</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Script de inicialização -->
+        <script>
+            // Inicializa variáveis globais
+            window.API_URLS = {
+                livroDetail: '{% url "api_livro_detail" 0 %}'.replace('0/', ''),
+                livroUpdate: '{% url "api_livro_update" 0 %}'.replace('0/', ''),
+                livroDelete: '{% url "api_livro_delete" 0 %}'.replace('0/', ''),
+            };
+            
+            // Função para obter CSRF token
+            function getCSRFToken() {
+                const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+                return csrfInput ? csrfInput.value : '';
+            }
+        </script>
         
-        // Função para obter CSRF token
-        function getCSRFToken() {
-            const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
-            return csrfInput ? csrfInput.value : '';
-        }
-    </script>
-    
-    <script src="{% static 'js/todos_livros.js' %}"></script>
-</body>
-</html>
+        <script src="{% static 'js/todos_livros.js' %}"></script>
+    </body>
+    </html>

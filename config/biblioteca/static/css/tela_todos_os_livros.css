@@ -7,6 +7,10 @@
     font-family: 'Lexend', sans-serif;
 }
 
+img.capa-livro {
+    width: 30px;
+}
+
 .livros-container {
     width: 100%;
     padding: 20px 40px;
@@ -461,4 +465,29 @@
     .btn-confirmar-exclusao {
         width: 100%;
     }
+}
+
+element.style {
+    width: 100%;
+}
+.select2-container--default .select2-search--inline .select2-search__field {
+    background: transparent;
+    border: none;
+    outline: 0;
+    box-shadow: none;
+}
+.select2-container .select2-search--inline .select2-search__field {
+    box-sizing: border-box;
+    border: none;
+    font-size: 100%;
+    margin-top: 5px;
+    margin-left: 5px;
+    padding: 0;
+    max-width: 100%;
+    resize: none;
+    height: 18px;
+    vertical-align: bottom;
+    font-family: sans-serif;
+    overflow: hidden;
+    word-break: keep-all;
 }

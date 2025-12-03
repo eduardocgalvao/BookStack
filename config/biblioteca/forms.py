@@ -19,6 +19,7 @@ class LivroCreateForm(forms.ModelForm):
             "isbn": forms.TextInput(attrs={"class": "input-field"}),
             "titulo": forms.TextInput(attrs={"class": "input-field"}),
             "ano_publicacao": forms.NumberInput(attrs={"class": "input-field"}),
+            "capa": forms.ClearableFileInput(attrs={"accept": "image/*"}),
             "editora": forms.Select(attrs={"class": "single-select"}),
             "status": forms.Select(attrs={"class": "single-select"}),
             "autores": Select2MultipleWidget(attrs={"class": "multi-select"}),

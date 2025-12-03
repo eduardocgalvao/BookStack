@@ -2,108 +2,123 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adicionar Livro</title>
     <link rel="stylesheet" href="{% static 'css/adicionar_livro.css' %}" />
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-</head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
+  <body>
     <header class="top-header">
-        <a href="{% url 'tela_inicial' %}" class="back-btn">←</a>
-        <img src="{% static 'img/logo.png' %}" class="logo" alt="BookStack Logo" />
-        <h1 class="titulo">Adicione um Novo Livro</h1>
+      <a href="{% url 'tela_inicial' %}" class="back-btn">←</a>
+      <img
+        src="{% static 'img/logo.png' %}"
+        class="logo"
+        alt="BookStack Logo"
+      />
+      <h1 class="titulo">Adicione um Novo Livro</h1>
     </header>
 
     <div class="container">
+      <!-- FORM ÚNICO -->
+      <form class="form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
 
-        <!-- FORM ÚNICO, CORRETO -->
-        <form class="form" method="POST" action="">
-            {% csrf_token %}
+        <div class="form-group">
+          <label for="{{ form.capa.id_for_label }}">Capa do Livro:</label>
+          {{ form.capa }} {% if form.capa.errors %}
+          <div class="error">{{ form.capa.errors }}</div>
+          {% endif %}
+          <small class="form-text text-muted">
+            Formatos aceitos: JPG, PNG, GIF. Tamanho máximo: 5MB.
+          </small>
+        </div>
 
-            <div class="form-group">
-                <label>Título:</label>
-                {{ form.titulo }}
-            </div>
+        <div class="form-group">
+          <label>Título:</label>
+          {{ form.titulo }}
+        </div>
 
-            <div class="form-group">
-                <label>Editora:</label>
-                {{ form.editora }}
-            </div>
+        <div class="form-group">
+          <label>Editora:</label>
+          {{ form.editora }}
+        </div>
 
-            <div class="form-group">
-                <label>ISBN:</label>
-                {{ form.isbn }}
-            </div>
+        <div class="form-group">
+          <label>ISBN:</label>
+          {{ form.isbn }}
+        </div>
 
-            <div class="form-group">
-                <label>Status:</label>
-                {{ form.status }}
-            </div>
+        <div class="form-group">
+          <label>Status:</label>
+          {{ form.status }}
+        </div>
 
-            <div class="form-group">
-                <label>Ano de publicação:</label>
-                {{ form.ano_publicacao }}
-            </div>
+        <div class="form-group">
+          <label>Ano de publicação:</label>
+          {{ form.ano_publicacao }}
+        </div>
 
-            <div class="form-group">
-                <label>Autores:</label>
-                {{ form.autores }}
-            </div>
+        <div class="form-group">
+          <label>Autores:</label>
+          {{ form.autores }}
+        </div>
 
-            <div class="form-group full">
-                <label>Categorias:</label>
-                {{ form.categorias }}
-            </div>
+        <div class="form-group full">
+          <label>Categorias:</label>
+          {{ form.categorias }}
+        </div>
 
-            <div class="btn-area">
-                <button type="submit" class="btn-add">Adicionar Livro</button>
-            </div>
-        </form>
+        <div class="btn-area">
+          <button type="submit" class="btn-add">Adicionar Livro</button>
+        </div>
+      </form>
     </div>
 
     <!-- POPUP -->
     <div id="popup" class="popup hidden">
-        <div class="popup-content">
-            <button class="popup-close" onclick="fecharPopup()">X</button>
-            <h2>Livro Salvo <span class="check">✔️</span></h2>
-            <p>Id: <span id="popup-id"></span></p>
-            <p>Nome: <span id="popup-nome"></span></p>
-        </div>
+      <div class="popup-content">
+        <button class="popup-close" onclick="fecharPopup()">X</button>
+        <h2>Livro Salvo <span class="check">✔️</span></h2>
+        <p>Id: <span id="popup-id"></span></p>
+        <p>Nome: <span id="popup-nome"></span></p>
+      </div>
     </div>
 
     <script>
-        function abrirPopup(id, nome) {
-            document.getElementById("popup-id").innerText = id;
-            document.getElementById("popup-nome").innerText = nome;
-            document.getElementById("popup").classList.remove("hidden");
-        }
+      function abrirPopup(id, nome) {
+        document.getElementById("popup-id").innerText = id;
+        document.getElementById("popup-nome").innerText = nome;
+        document.getElementById("popup").classList.remove("hidden");
+      }
 
-        function fecharPopup() {
-            document.getElementById("popup").classList.add("hidden");
-        }
+      function fecharPopup() {
+        document.getElementById("popup").classList.add("hidden");
+      }
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $('.multi-select').select2({
-                placeholder: "Selecione...",
-                width: '100%'
-            });
+      $(document).ready(function () {
+        $(".multi-select").select2({
+          placeholder: "Selecione...",
+          width: "100%",
         });
+      });
     </script>
 
     {% if sucesso %}
-        <script>
-            abrirPopup("{{ livro_id }}", "{{ livro_nome }}");
-        </script>
+    <script>
+      abrirPopup("{{ livro_id }}", "{{ livro_nome }}");
+    </script>
     {% endif %}
-
-</body>
+  </body>
 </html>

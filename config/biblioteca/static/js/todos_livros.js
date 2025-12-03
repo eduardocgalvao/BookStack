@@ -149,8 +149,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Preenche o formulário
                 document.getElementById("edit-id").value = livro.id;
                 document.getElementById("edit-titulo").value = livro.titulo || '';
-                document.getElementById("edit-editora").value = livro.editora || '';
-                document.getElementById("edit-autores").value = livro.autores || '';
+                document.getElementById("edit-editora").value = livro.editora_id || '';
+                document.getElementById("edit-autores").value = livro.autores_id || '';
                 document.getElementById("edit-ano").value = livro.ano_publicacao || '';
                 document.getElementById("edit-categoria").value = livro.categoria_id || '';
                 document.getElementById("edit-status").value = livro.status_id || 'ativo';
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
         icon.addEventListener("click", function() {
             const bookId = this.getAttribute("data-id");
             const row = this.closest("tr");
-            const bookTitle = row.querySelector("td:nth-child(2)").textContent;
+            const bookTitle = row.querySelector("td:nth-child(3)").textContent;
             
             console.log(`Clicou em excluir livro ID: ${bookId} - "${bookTitle}"`);
             
@@ -305,3 +305,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log("Configuração de eventos concluída");
 });
+
+const autoresNomes =  data.autores.split(",").filter(a => a.trim() !== "");
+
+$("#edit-autores option").each(function() {
+    if (autoresNomes.includes($(this).text().trim())) {
+        $(this).prop("selected", true);
+    }
+});
+
+$("#edit-autores").trigger("change");

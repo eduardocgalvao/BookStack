@@ -1,7 +1,7 @@
 """Modelos de banco de dados para o sistema de biblioteca."""
 
 from django.db import models
-
+import os
 
 class tbl_editora(models.Model):
     """Armazena informações das editoras de livros."""
@@ -46,6 +46,13 @@ class tbl_status_livro(models.Model):
     def __str__(self):
         return self.descricao
 
+# Função para definir o caminho de upload da capa do livro
+def livro_capa_upload_path(instance, filename):
+    """Define o caminho de upload para capas de livros."""
+    # Gera um nome único baseado no ID do livro
+    ext = filename.split('.')[-1]
+    filename = f"capa_{instance.id_livro}.{ext}"
+    return os.path.join('capas_livros', filename)
 
 class tbl_livro(models.Model):
     """Tabela principal com informações dos livros do acervo."""
@@ -55,6 +62,11 @@ class tbl_livro(models.Model):
     ano_publicacao = models.IntegerField()
     editora = models.ForeignKey(tbl_editora, on_delete=models.PROTECT)
     status = models.ForeignKey(tbl_status_livro, on_delete=models.PROTECT)
+    capa = models.ImageField(
+        upload_to=livro_capa_upload_path, 
+        null=True, 
+        blank=True, 
+        verbose_name="Capa do Livro")
     # Relacionamentos Many-to-Many com tabelas de associação
     autores = models.ManyToManyField(tbl_autor, through="tbl_livro_autor")
     categorias = models.ManyToManyField(tbl_categoria, through="tbl_livro_categoria")

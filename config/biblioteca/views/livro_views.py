@@ -10,55 +10,41 @@ from ..models import tbl_livro, tbl_livro_autor, tbl_livro_categoria, tbl_editor
 
 
 class LivroCreateView(View):
-    """View para criar um novo livro."""
     template_name = "adicionar_livro.html"
 
     def get(self, request):
-        form = LivroCreateForm()
-        editoras = tbl_editora.objects.all()
-        status_list = tbl_status_livro.objects.filter(ativo=True)
         return render(request, self.template_name, {
-            "form": form, 
-            "editoras": editoras, 
-            "status_list": status_list})
+            "form": LivroCreateForm(),
+            "editoras": tbl_editora.objects.all(),
+            "status_list": tbl_status_livro.objects.filter(ativo=True)
+        })
 
     def post(self, request):
-        form = LivroCreateForm(request.POST)
+        print("DEBUG: POST recebido")
+
+        form = LivroCreateForm(request.POST, request.FILES)
         editoras = tbl_editora.objects.all()
         status_list = tbl_status_livro.objects.filter(ativo=True)
-        
+
         if not form.is_valid():
-            print(form.errors)
+            print("DEBUG: Form inválido:", form.errors)
             return render(request, self.template_name, {
-                "form": form, 
+                "form": form,
                 "editoras": editoras,
                 "status_list": status_list
-                })
+            })
 
-        # Cria o livro
-        livro = tbl_livro.objects.create(
-            isbn=form.cleaned_data["isbn"],
-            titulo=form.cleaned_data["titulo"],
-            ano_publicacao=form.cleaned_data["ano_publicacao"],
-            editora=form.cleaned_data["editora"],
-            status=form.cleaned_data["status"]
-        )
-
-        # Autores
-        for autor in form.cleaned_data["autores"]:
-            tbl_livro_autor.objects.create(livro=livro, autor=autor)
-
-        # Categorias
-        for categoria in form.cleaned_data["categorias"]:
-            tbl_livro_categoria.objects.create(livro=livro, categoria=categoria)
+        # FORM
+        livro = form.save()
 
         return render(request, self.template_name, {
-            "form": LivroCreateForm(), 
+            "form": LivroCreateForm(),
             "editoras": editoras,
             "status_list": status_list,
             "sucesso": True,
             "livro_id": livro.id_livro,
-            "livro_nome": livro.titulo
+            "livro_nome": livro.titulo,
+            "livro_capa": livro.capa.url if livro.capa else None
         })
 
 
@@ -84,12 +70,13 @@ def tela_todos_livros(request):
     
     todas_categorias = tbl_categoria.objects.all()
     todas_editoras = tbl_editora.objects.all()
-    #todos_status = tbl_status_livro.objects.filter(ativo=True)
+    todos_autores = tbl_autor.objects.all()
     
     return render(request, 'tela_todos_os_livros.html', {
         'livros_com_relacionados': livros_com_relacionados,
         'categorias': todas_categorias,
         'editoras': todas_editoras,
+        'autores': todos_autores,
         "status_list": tbl_status_livro.objects.filter(ativo=True)
     })
 
@@ -230,7 +217,7 @@ def api_livro_update(request, livro_id):
             livro.save()
             print(f"Livro {livro_id} salvo. Status atual: {livro.status}")
             
-            # Atualiza categorias - CORREÇÃO: Use id_categoria em vez de id
+            # Atualiza categorias
             if 'categoria_id' in data and data['categoria_id']:
                 try:
                     categoria = tbl_categoria.objects.get(id_categoria=data['categoria_id'])
@@ -243,6 +230,13 @@ def api_livro_update(request, livro_id):
                         'success': False, 
                         'error': 'Categoria não encontrada'
                     }, status=404)
+                    
+            if 'autores_id' in data:
+                tbl_livro_autor.objects.filter(livro=livro).delete()
+                
+                for autor_id in data['autores_id']:
+                    autor = tbl_autor.objects.get(id_autor=autor_id)
+                    tbl_livro_autor.objects.create(livro=livro, autor=autor)
             
             return JsonResponse({
                 'success': True, 

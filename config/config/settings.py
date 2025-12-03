@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from django.conf import settings
 from dotenv import load_dotenv
 import os
 
@@ -146,3 +147,11 @@ AUTHENTICATION_BACKENDS = [
     'biblioteca.authentication.TblUsuarioBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# Configuração para servir arquivos de mídia em modo de desenvolvimento
+if DEBUG:
+    from django.conf.urls.static import static
+    urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

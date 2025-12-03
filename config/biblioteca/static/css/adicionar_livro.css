@@ -23,6 +23,10 @@ body {
     color: black;
 }
 
+.back-btn:hover {
+    color: #017a78;
+}
+
 .logo {
     display: block;
     margin-left: auto;

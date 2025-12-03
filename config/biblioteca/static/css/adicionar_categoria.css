@@ -44,7 +44,7 @@ body {
     margin: 40px auto;
     padding: 45px;
     border-radius: 12px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
 }
 
 .input {
@@ -72,16 +72,19 @@ body {
 }
 
 .campo input {
-    width: 90%;
+    width: 100%;
     padding: 10px 12px;
-    border: 1px solid #BAD7E3;
+    border: 1px solid #bad7e3;
     border-radius: 5px;
+    outline: none;
+    font-weight: 600;
+    color: #1c1c1c;
     font-size: 14px;
 }
 
 .campo input:focus {
     border-color: #0e9c99;
-    box-shadow: 0 0 5px rgba(14,156,153,0.4);
+    box-shadow: 0 0 5px rgba(14, 156, 153, 0.4);
 }
 
 /* Botão */

@@ -9,9 +9,8 @@ class LivroCreateView(View):
     template_name = "adicionar_livro.html"
 
     def get(self, request):
-        form = LivroCreateForm()
+        form = LivroCreateForm(request.POST)
         editoras = tbl_editora.objects.all()
-        return render(request, self.template_name, {"form": form, "editoras": editoras})
 
     def post(self, request):
         form = LivroCreateForm(request.POST)
@@ -38,7 +37,13 @@ class LivroCreateView(View):
         for categoria in form.cleaned_data["categorias"]:
             tbl_livro_categoria.objects.create(livro=livro, categoria=categoria)
 
-        return redirect("tela_todos_livros")
+        return render(request, self.template_name, {
+        "form": LivroCreateForm(), 
+        "editoras": editoras,
+        "sucesso": True,
+        "livro_id": livro.id_livro,
+        "livro_nome": livro.titulo
+    })
 
 def tela_todos_livros(request):
     """Exibe uma lista de todos os livros disponíveis na biblioteca."""

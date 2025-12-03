@@ -33,6 +33,9 @@ O desenvolvimento segue metodologias ágeis, garantindo entregas rápidas e iter
 
 ```
 
+
+
+
 config/
 ├── biblioteca/
 │   ├── **pycache**/
@@ -64,6 +67,11 @@ manage.py
 README.md
 .vscode/
 └── settings.json
+
+
+
+
+
 
 ````
 

@@ -42,7 +42,7 @@
                 <tbody>
                     {% for item in livros_com_relacionados %}
                     {% with livro=item.livro autores=item.autores categorias=item.categorias %}
-                    <tr data-id="{{ livro.id_livro }}">  <!-- CORREÇÃO: id_livro -->
+                    <tr data-id="{{ livro.id_livro }}">
                         <td class="acoes-cell">
                             <span class="edit-icon" data-id="{{ livro.id_livro }}">✏️</span>
                             <span class="delete-icon" data-id="{{ livro.id_livro }}">🗑️</span>

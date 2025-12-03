@@ -73,8 +73,8 @@
                                 -
                             {% endfor %}
                         </td>
-                        <td>{{ livro.data_criacao|date:"d/m/Y"|default:"-" }}</td>
-                        <td>{{ livro.data_atualizacao|date:"d/m/Y"|default:"-" }}</td>
+                        <td>{{ livro.dt_criacao|date:"d/m/Y"|default:"-" }}</td>
+                        <td>{{ livro.dt_atualizacao|date:"d/m/Y"|default:"-" }}</td>
                     </tr>
                     {% endwith %}
                     {% empty %}

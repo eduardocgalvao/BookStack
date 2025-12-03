@@ -1,4 +1,5 @@
 """Views para gerenciamento de livros."""
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -7,6 +8,15 @@ import json
 from django.views import View
 from ..forms import LivroCreateForm, LivroAutorForm, LivroCategoriaForm
 from ..models import tbl_livro, tbl_livro_autor, tbl_livro_categoria, tbl_editora, tbl_autor, tbl_categoria
+
+
+# Para todos os livros sem data_criacao
+livros_sem_data = tbl_livro.objects.filter(dt_criacao__isnull=True)
+for livro in livros_sem_data:
+    livro.dt_criacao = timezone.now()
+    livro.dt_atualizacao = timezone.now()
+    livro.save()
+    print(f"Atualizado: {livro.titulo}")
 
 class LivroCreateView(View):
     """View para criar um novo livro."""
@@ -137,6 +147,7 @@ def api_livro_update(request, livro_id):
                 except tbl_categoria.DoesNotExist:
                     pass
             
+            # SALVA O LIVRO
             livro.save()
             
             return JsonResponse({'success': True, 'message': 'Livro atualizado com sucesso'})

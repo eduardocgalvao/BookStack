@@ -114,9 +114,8 @@ Contribuições são muito bem-vindas! Para colaborar com o projeto:
 
 ## Contato
 
-* Desenvolvido por: **[Seu Nome / Equipe]**
-* Email: **[seuemail@exemplo.com](mailto:seuemail@exemplo.com)**
-* Repositório GitHub: **[https://github.com/seuusuario/biblioteca_escolar](https://github.com/seuusuario/biblioteca_escolar)**
+* Desenvolvido por: **Eduardo Galvão, Daniel David e Murilo Chagas**
+* Repositório GitHub: **https://github.com/eduardocgalvao/sistema-biblioteca**
 
 ---
 
@@ -124,7 +123,4 @@ Contribuições são muito bem-vindas! Para colaborar com o projeto:
 
 Este projeto está licenciado sob a **MIT License**.
 
-```
-
-Se precisar de ajustes no conteúdo, mais seções ou até badges, me avise!
 ```

@@ -6,50 +6,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Título da página exibido na aba do navegador -->
+    <!-- Página de login -->
     <title>Login - BookStack</title>
 
-    <!-- Template tag do Django para carregar arquivos estáticos -->
-    {% load static %}
-
-    <!-- Link para folha de estilos CSS customizada -->
+    <!-- CSS principal da tela -->
     <link rel="stylesheet" href="{% static 'css/login.css' %}" />
   </head>
 
-  <!-- ========================================
-       SEÇÃO BODY - Conteúdo Principal
-       ======================================== -->
   <body>
-    <!-- Elemento semântico principal da página -->
     <main>
-      <!-- Container principal que envolve todo o conteúdo de login -->
       <div class="container">
 
-        <!-- Logo do BookStack no topo da página -->
+        <!-- Logo do sistema -->
         <img src="{% static 'img/logo.png' %}" class="logo" alt="BookStack Logo" />
 
-        <!-- Título principal da página -->
         <h1>Inicie sua sessão</h1>
 
-        <!-- Card/Cartão contendo o formulário de login -->
         <div class="card">
-          <!-- Subtítulo de boas-vindas -->
-          <h2>
-            Bem-vindo ao BookStack! Por favor, insira suas informações para
-            continuar.
-          </h2>
+          <!-- Texto introdutório -->
+          <h2>Bem-vindo ao BookStack! Por favor, insira suas informações para continuar.</h2>
 
-          <!-- Linha divisória visual -->
           <hr />
 
-          <!-- Formulário de autenticação com método POST -->
+          <!-- Formulário de autenticação -->
           <form method="post" novalidate>
-            <!-- Token CSRF do Django para proteção contra ataques -->
             {% csrf_token %}
 
-            <!-- Linha de formulário contendo dois campos lado a lado -->
             <div class="form-row">
-              <!-- Grupo de formulário: Campo de Primeiro Nome -->
+              <!-- Campo: Primeiro Nome -->
               <div class="form-group">
                 <label for="name">Primeiro Nome</label>
                 <input
@@ -61,7 +45,7 @@
                 />
               </div>
 
-              <!-- Grupo de formulário: Campo de Sobrenome -->
+              <!-- Campo: Sobrenome -->
               <div class="form-group">
                 <label for="surname">Sobrenome</label>
                 <input
@@ -74,7 +58,7 @@
               </div>
             </div>
 
-            <!-- Grupo de formulário: Campo de E-mail (ocupa largura completa) -->
+            <!-- Campo: E-mail -->
             <div class="form-group full">
               <label for="email">E-mail</label>
               <input
@@ -86,7 +70,7 @@
               />
             </div>
 
-            <!-- Botão de envio do formulário -->
+            <!-- Botão principal -->
             <button type="submit">Iniciar minha Biblioteca</button>
           </form>
         </div>

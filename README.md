@@ -1,10 +1,8 @@
-Claro! Aqui está o README.md completo atualizado para o seu projeto, já refletindo a estrutura que você enviou:
-
 ```markdown
 # Sistema de Gestão de Biblioteca Escolar
 
 ## Descrição do Projeto
-Este projeto consiste em um **Sistema de Gestão de Biblioteca Escolar**, desenvolvido com **Python, Django e MySQL**, com o objetivo de facilitar o gerenciamento de livros, alunos, empréstimos e devoluções em uma biblioteca escolar. O sistema permite o controle eficiente do acervo, histórico de empréstimos e geração de relatórios para a equipe responsável.
+Este projeto consiste em um **Sistema de Gestão de Biblioteca Escolar**, desenvolvido com **Python, Django e MySQL**, com o objetivo de facilitar o gerenciamento de livros, alunos, empréstimos e devoluções em uma biblioteca escolar. O sistema permite o controle eficiente do acervo, adição de volumes, registro de autores, categorias e editoras para a equipe responsável.
 
 O desenvolvimento segue metodologias ágeis, garantindo entregas rápidas e iterativas, com foco na qualidade e na experiência do usuário (UX/UI).
 
@@ -22,10 +20,8 @@ O desenvolvimento segue metodologias ágeis, garantindo entregas rápidas e iter
 
 ## Funcionalidades
 - Cadastro e gerenciamento de livros e suas categorias  
-- Controle de cadastro de alunos e usuários  
-- Empréstimos e devoluções de livros com registro histórico  
+- Controle de cadastro de usuários  
 - Consulta de disponibilidade de livros em tempo real  
-- Emissão de relatórios de empréstimos, devoluções e livros disponíveis  
 
 ---
 
@@ -51,11 +47,23 @@ venv\Scripts\activate     # Windows
 pip install -r requirements.txt
 ```
 
-4. Configure o banco de dados MySQL no arquivo `config/settings.json` ou diretamente no `settings.py`, conforme sua arquitetura.
+4. Configure o banco de dados MySQL no arquivo .env, conforme a arquitetura.
+
+Crie um aquivo .env na raiz do projeto:
+
+```
+cd "sistema-biblioteca"
+echo "DB_NAME=<Nome do seu banco>
+DB_USER=<Nome do user>
+DB_PASSWORD=<Sua senha>
+DB_HOST=<Seu host>
+DB_PORT=<Sua porta>" > .env
+
 
 5. Execute as migrações para criar as tabelas no banco:
 
 ```bash
+python manage.py makemigrations
 python manage.py migrate
 ```
 

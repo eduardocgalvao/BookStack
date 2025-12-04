@@ -5,82 +5,112 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Título exibido na aba do navegador -->
     <title>Adicionar Editora</title>
+
+    <!-- Arquivo CSS exclusivo da página -->
     <link rel="stylesheet" href="{% static 'css/adicionar_editora.css' %}" />
   </head>
+
   <body>
+
+    <!-- Botão para retornar à tela inicial -->
     <a href="{% url 'tela_inicial' %}" class="back-btn">←</a>
 
+    <!-- Cabeçalho superior com logo e título -->
     <div class="top-header">
-      <img src="/static/img/logo.png" class="logo" />
+      <img src="/static/img/logo.png" class="logo" alt="Logo" />
       <h1 class="titulo">Adicionar Editora</h1>
     </div>
 
+    <!-- Container principal do formulário -->
     <div class="container">
+
+      <!-- Formulário responsável por criar a editora -->
       <form action="{% url 'editora-create' %}" method="POST">
         {% csrf_token %}
 
+        <!-- Grid que organiza os campos em colunas -->
         <div class="form-grid">
+
+          <!-- Campo Nome -->
           <div class="campo">
             <label>Nome da Editora:</label>
             <input type="text" name="nome" required />
           </div>
 
+          <!-- Campo Endereço -->
           <div class="campo">
             <label>Endereço:</label>
             <input type="text" name="endereco" />
           </div>
 
+          <!-- Campo Cidade -->
           <div class="campo">
             <label>Cidade:</label>
             <input type="text" name="cidade" />
           </div>
         </div>
 
+        <!-- Área do botão principal -->
         <div class="btn-area">
           <button class="btn-add">Adicionar Editora</button>
         </div>
       </form>
     </div>
 
-        <!-- POPUP -->
+    <!-- POPUP de confirmação após salvar -->
     <div id="popup" class="popup hidden">
-        <div class="popup-content">
-            <button class="popup-close" onclick="fecharPopup()">X</button>
-            <h2>Editora Salva <span class="check">✔️</span></h2>
-            <p>Id: <span id="popup-id"></span></p>
-            <p>Nome da Editora: <span id="popup-nome"></span></p>
-        </div>
+      <div class="popup-content">
+
+        <!-- Botão para fechar o popup -->
+        <button class="popup-close" onclick="fecharPopup()">X</button>
+
+        <!-- Título da mensagem -->
+        <h2>Editora Salva <span class="check">✔️</span></h2>
+
+        <!-- Dados exibidos dinamicamente -->
+        <p>Id: <span id="popup-id"></span></p>
+        <p>Nome da Editora: <span id="popup-nome"></span></p>
+      </div>
     </div>
 
+    <!-- Script do popup -->
     <script>
-        function abrirPopup(id, nome) {
-            document.getElementById("popup-id").innerText = id;
-            document.getElementById("popup-nome").innerText = nome;
-            document.getElementById("popup").classList.remove("hidden");
-        }
+      function abrirPopup(id, nome) {
+        document.getElementById("popup-id").innerText = id;
+        document.getElementById("popup-nome").innerText = nome;
+        document.getElementById("popup").classList.remove("hidden");
+      }
 
-        function fecharPopup() {
-            document.getElementById("popup").classList.add("hidden");
-        }
+      function fecharPopup() {
+        document.getElementById("popup").classList.add("hidden");
+      }
     </script>
 
+    <!-- jQuery (necessário para Select2 caso usado em outra parte) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Biblioteca Select2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    <!-- Inicialização de Select2 -->
     <script>
-        $(document).ready(function() {
-            $('.multi-select').select2({
-                placeholder: "Selecione...",
-                width: '100%'
-            });
+      $(document).ready(function() {
+        $('.multi-select').select2({
+          placeholder: "Selecione...",
+          width: '100%'
         });
+      });
     </script>
 
+    <!-- Se a operação foi concluída com sucesso, abre o popup -->
     {% if sucesso %}
-        <script>
-            abrirPopup("{{ editora_id }}", "{{ editora_nome }}");
-        </script>
+    <script>
+      abrirPopup("{{ editora_id }}", "{{ editora_nome }}");
+    </script>
     {% endif %}
+
   </body>
 </html>

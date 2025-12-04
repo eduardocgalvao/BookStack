@@ -51,13 +51,14 @@ pip install -r requirements.txt
 
 Crie um aquivo .env na raiz do projeto:
 
-```
+```bash
 cd "sistema-biblioteca"
 echo "DB_NAME=<Nome do seu banco>
 DB_USER=<Nome do user>
 DB_PASSWORD=<Sua senha>
 DB_HOST=<Seu host>
 DB_PORT=<Sua porta>" > .env
+```
 
 
 5. Execute as migrações para criar as tabelas no banco:

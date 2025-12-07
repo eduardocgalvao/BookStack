@@ -1,7 +1,7 @@
 """Exporta todas as views."""
 from .auth_views import (login_view, tela_inicial)
 from .livro_views import (
-    LivroCreateView, tela_todos_livros, RemoverLivroView,
+    LivroCreateView, livro_list, RemoverLivroView,
     AssociarAutorView, AssociarCategoriaView
 )
 from .autor_views import (

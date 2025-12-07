@@ -10,7 +10,7 @@ from ..models import tbl_livro, tbl_livro_autor, tbl_livro_categoria, tbl_editor
 
 
 class LivroCreateView(View):
-    template_name = "adicionar_livro.html"
+    template_name = "livro/livro_form.html"
 
     def get(self, request):
         return render(request, self.template_name, {
@@ -48,7 +48,7 @@ class LivroCreateView(View):
         })
 
 
-def tela_todos_livros(request):
+def livro_list(request):
     """Exibe uma lista de todos os livros disponíveis na biblioteca."""
     livros = tbl_livro.objects.all().select_related('editora', 'status')
     
@@ -72,7 +72,7 @@ def tela_todos_livros(request):
     todas_editoras = tbl_editora.objects.all()
     todos_autores = tbl_autor.objects.all()
     
-    return render(request, 'tela_todos_os_livros.html', {
+    return render(request, 'livro/livro_list.html', {
         'livros_com_relacionados': livros_com_relacionados,
         'categorias': todas_categorias,
         'editoras': todas_editoras,
@@ -392,7 +392,7 @@ class RemoverLivroView(View):
     def post(self, request, pk):
         livro = get_object_or_404(tbl_livro, id_livro=pk)
         livro.delete()
-        return redirect('tela_todos_livros')
+        return redirect('livro_list')
 
 
 class AssociarAutorView(View):

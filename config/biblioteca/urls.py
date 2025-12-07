@@ -38,7 +38,7 @@ from .views import (
     MotivoRemocaoCreateView,
     MotivoRemocaoUpdateView,
     MotivoRemocaoDeleteView,
-    tela_inicial,
+    home,
 )
 
 urlpatterns = [
@@ -46,7 +46,7 @@ urlpatterns = [
     path("", login_view, name="login"),
     
     # TELA INICIAL
-    path("tela_inicial/", tela_inicial, name="tela_inicial"),
+    path("home/", home, name="home"),
     
     # API para livros
     path("api/livro/<int:livro_id>/", api_livro_detail, name="api_livro_detail"),

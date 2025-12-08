@@ -1,0 +1,20 @@
+<!-- biblioteca/templates/partials/sidebar.html -->
+{% load static %}
+<aside class="sidebar">
+  <div class="logo-area">
+    <img src="{% static 'img/logo.png' %}" alt="Logo" />
+  </div>
+
+  <nav class="menu">
+    <!-- Use os nomes CORRETOS das suas URLs -->
+    <a href="{% url 'livro-list' %}"><i>📚</i> Todos os Livros</a>
+    <a href="{% url 'livro-create' %}"><i>➕</i> Adicionar Livros</a>
+    <a href="{% url 'editora-list' %}"><i>🏢</i> Editoras</a>
+    <a href="{% url 'autor-list' %}"><i>🖋️</i> Autores</a>
+    <a href="{% url 'categoria-list' %}"><i>📦</i> Categorias</a>
+  </nav>
+
+  <div class="logout">
+    <a href="/"><i>🚪</i> Encerrar Sessão</a>
+  </div>
+</aside>

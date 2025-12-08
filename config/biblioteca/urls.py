@@ -46,7 +46,7 @@ urlpatterns = [
     path("", login_view, name="login"),
     
     # TELA INICIAL
-    path("home/", home, name="home"),
+    path('home/', home, name='home'),
     
     # API para livros
     path("api/livro/<int:livro_id>/", api_livro_detail, name="api_livro_detail"),

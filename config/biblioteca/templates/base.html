@@ -1,0 +1,40 @@
+<!-- templates/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}BookStack{% endblock %}</title>
+    
+    <!-- Estilos principais -->
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+    
+    <!-- Estilos específicos por página -->
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    
+    <!-- Scripts globais (jQuery, etc) -->
+    {% block head_scripts %}{% endblock %}
+  </head>
+
+  <body>
+    <!-- Menu lateral fixo -->
+    {% include 'partials/sidebar.html' %}
+    
+    <!-- Conteúdo principal -->
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Scripts específicos por página -->
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

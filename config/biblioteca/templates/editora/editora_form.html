@@ -1,22 +1,21 @@
+<!-- biblioteca/templates/editora/editora_form.html-->
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <!-- Título exibido na aba do navegador -->
-    <title>Adicionar Editora</title>
+{% block title %}Adicionar Editora{% endblock %}
 
+{% block extra_css %}
     <!-- Arquivo CSS exclusivo da página -->
-    <link rel="stylesheet" href="{% static 'css/adicionar_editora.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/editora_form.css' %}" />
   </head>
+{% endblock %}
 
+{% block content %}
   <body>
 
     <!-- Botão para retornar à tela inicial -->
-    <a href="{% url 'tela_inicial' %}" class="back-btn">←</a>
+    <a href="{% url 'home' %}" class="back-btn">←</a>
 
     <!-- Cabeçalho superior com logo e título -->
     <div class="top-header">
@@ -75,8 +74,10 @@
         <p>Nome da Editora: <span id="popup-nome"></span></p>
       </div>
     </div>
+{% endblock %}
 
-    <!-- Script do popup -->
+{% block scripts %}
+<!-- Script do popup -->
     <script>
       function abrirPopup(id, nome) {
         document.getElementById("popup-id").innerText = id;
@@ -111,6 +112,6 @@
       abrirPopup("{{ editora_id }}", "{{ editora_nome }}");
     </script>
     {% endif %}
-
+{% endblock %}
   </body>
 </html>

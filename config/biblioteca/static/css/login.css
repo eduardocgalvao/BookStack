@@ -1,165 +1,173 @@
-/* Importa a fonte 'Lexend' do Google Fonts com múltiplos pesos */
+/* ================================
+   FONTE
+================================ */
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap');
 
-/* ========================================
-   ESTILOS GLOBAIS / RESET
-   ======================================== */
-/* Reseta margens, paddings e aplica box-sizing padrão a todos os elementos */
+/* ================================
+   RESET GLOBAL
+================================ */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Lexend', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lexend', sans-serif;
 }
 
-.logo {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width:200px;
-
-}
-
-/* ========================================
-   ESTILOS DE TIPOGRAFIA
-   ======================================== */
-/* Título principal da página (h1) */
-h1 {
-    font-size: 3rem;
-    color: #222;
-    text-align: center;
-    padding: 50px 0;
-}
-
-/* Subtítulo/descrição do card (h2) */
-h2 {
-    font-size: 1rem;
-    color: #000000;
-    margin-bottom: 20px;
-}
-
-/* Estilo dos rótulos dos campos de formulário */
-label {
-    font-size: 0.9rem;
-    margin-bottom: 6px;
-    color: #333;
-    font-weight: 600;
-}
-
-/* ========================================
-   ELEMENTOS VISUAIS
-   ======================================== */
-/* Linha divisória */
-hr {
-    border: none;
-    border-top: 1px solid #e1e1e1;
-    margin-bottom: 35px;
-}
-
-/* ========================================
-   LAYOUT DO FORMULÁRIO
-   ======================================== */
-
-/* Linha que contém múltiplos campos lado a lado */
-.form-row {
-    display: flex;
-    gap: 25px;
-    margin-bottom: 25px;
-}
-
-/* Agrupamento individual de campo de formulário */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-/* Modificador para campo que ocupa largura completa */
-.form-group.full {
-    width: 100%;
-}
-
-/* ========================================
-   CAMPOS DE ENTRADA (INPUT)
-   ======================================== */
-/* Estilos base para todos os inputs */
-input {
-    width: 100%;
-    max-width: 420px; /* Máximo para desktop */
-    padding: 10px 20px;
-    border: 1px solid #4db8b6;
-    border-radius: 5px;
-    outline: none;
-    font-weight: 600;
-    color: #1c1c1c;
-}
-
-/* Estado de foco (quando o input está ativo) */
-input:focus {
-    border-color: #0e9c99;
-    box-shadow: 0 0 5px rgba(14,156,153,0.4);
-}
-
-/* ========================================
-   BOTÕES
-   ======================================== */
-/* Botão de submit do formulário */
-button {
-    cursor: pointer;
-    width: 100%;
-    max-width: 266px;
-    height: 40px;
-    border: none;
-    color: #fff;
-    border-radius: 8px;
-    background: #0e9c99;
-    margin: 20px 0 0 0;
-}
-
-/* Classe alternativa para botão (não utilizada atualmente) */
-.btn {
-    width: 230px;
-    padding: 12px 15px;
-    background: #0e9c99;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-/* Estado de hover para botão .btn */
-.btn:hover {
-    background: #37aab8;
-}
-
-/* ========================================
-   ESTRUTURA E LAYOUT GERAL
-   ======================================== */
-/* Body: ocupa toda a altura da viewport e centraliza o conteúdo */
+/* ================================
+   BODY
+================================ */
 body {
-    background: #f5f5f5;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Container: wrapper responsivo com largura máxima */
-#container {
-    width: 100%;
-    max-width: 900px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* ================================
+   CONTAINER PRINCIPAL
+================================ */
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 20px;
+  text-align: center;
 }
 
-/* Card: cartão com estilo de caixa elevada (sombra) */
+/* ================================
+   LOGO
+================================ */
+.logo {
+  width: 200px;
+  margin: 0 auto 30px auto;
+  display: block;
+}
+
+/* ================================
+   TÍTULOS
+================================ */
+h1 {
+  font-size: 2.2rem;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+/* ================================
+   CARD
+================================ */
 .card {
-    background: #fff;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.8);
+  background: #fff;
+  padding: 35px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  text-align: left;
+}
+
+/* ================================
+   DIVISÓRIA
+================================ */
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin-bottom: 25px;
+}
+
+/* ================================
+   FORMULÁRIO
+================================ */
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.form-group.full {
+  width: 100%;
+}
+
+/* ================================
+   LABEL
+================================ */
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* ================================
+   INPUTS
+================================ */
+input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 8px;
+  border: 1px solid #4db8b6;
+  outline: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1c1c1c;
+  transition: 0.2s;
+}
+
+input::placeholder {
+  color: #999;
+}
+
+input:focus {
+  border-color: #0e9c99;
+  box-shadow: 0 0 0 2px rgba(14, 156, 153, 0.15);
+}
+
+/* ================================
+   BOTÃO
+================================ */
+button {
+  width: 100%;
+  height: 44px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #0e9c99;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #119f9c;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* ================================
+   RESPONSIVIDADE
+================================ */
+@media (max-width: 500px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
 }

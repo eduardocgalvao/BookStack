@@ -1,0 +1,37 @@
+<!-- templates/livro/list.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Catálogo de Livros - BookStack{% endblock %}
+
+{% block content %}
+  <!-- Busca por título -->
+  <form method="GET" class="search-box">
+    <input
+      type="text"
+      name="q"
+      placeholder="Procurar por nome do livro..."
+      value="{{ query|default:'' }}"
+    />
+  </form>
+
+  <h1 class="title">Catálogo de Livros</h1>
+
+  <section class="books-grid">
+    {% for livro in livros %}
+    <div class="book-card">
+      <!-- Capa do livro -->
+      {% if livro.capa %}
+      <img src="{{ livro.capa.url }}" alt="{{ livro.titulo }}" />
+      {% else %}
+      <img src="{% static 'img/placeholder.png' %}" alt="Sem capa" />
+      {% endif %}
+
+      <p>{{ livro.titulo }}</p>
+    </div>
+    {% empty %}
+    <!-- Lista vazia -->
+    <p>Nenhum livro encontrado.</p>
+    {% endfor %}
+  </section>
+{% endblock %}

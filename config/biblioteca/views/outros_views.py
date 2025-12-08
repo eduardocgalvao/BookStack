@@ -7,7 +7,7 @@ from ..models import tbl_status_livro, tbl_usuario, tbl_motivo_remocao
 # LISTAR STATUS --------------------------------------------------------
 
 class StatusLivroListView(View):
-    template_name = "tela_inicial.html"
+    template_name = "dashboard/home.html"
 
     def get(self, request):
         status_list = tbl_status_livro.objects.all()
@@ -17,7 +17,7 @@ class StatusLivroListView(View):
 # CRIAR STATUS ---------------------------------------------------------
 
 class StatusLivroCreateView(View):
-    template_name = "tela_inicial.html"
+    template_name = "dashboard/home.html"
 
     def get(self, request):
         form = StatusLivroForm()
@@ -34,7 +34,7 @@ class StatusLivroCreateView(View):
 # EDITAR STATUS --------------------------------------------------------
 
 class StatusLivroUpdateView(View):
-    template_name = "tela_inicial.html"
+    template_name = "dashboard/home.html"
 
     def get(self, request, pk):
         status_item = get_object_or_404(tbl_status_livro, pk=pk)
@@ -53,7 +53,7 @@ class StatusLivroUpdateView(View):
 # DELETAR STATUS --------------------------------------------------------
 
 class StatusLivroDeleteView(View):
-    template_name = "biblioteca/tela_inicial.html"
+    template_name = "biblioteca/dashboard/home.html"
 
     def get(self, request, pk):
         status_item = get_object_or_404(tbl_status_livro, pk=pk)

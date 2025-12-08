@@ -1,14 +1,18 @@
+<!-- biblioteca/templates/autor/autor_form.html-->
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adicionar Autor</title>
-    <link rel="stylesheet" href="{% static 'css/adicionar_autor.css' %}" />
+
+<!-- Título exibido na aba do navegador -->
+{% block title %}Adicionar Autor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/autor_form.css' %}" />
 </head>
+{% endblock %}
+
+{% block content %}
 <body>
-    <a href="{% url 'tela_inicial' %}" class="back-btn">←</a>
+    <a href="{% url 'home' %}" class="back-btn">←</a>
 
     <div class="pagina">
         <div class="cabecalho-livro">
@@ -42,7 +46,9 @@
             </form>
         </div>
     </div>
+{% endblock %}
 
+{% block scripts %}
     <!-- POP-UP DE SUCESSO -->
     {% if sucesso %}
     <div id="popup" class="popup mostrar">
@@ -74,5 +80,6 @@
         });
     </script>
     {% endif %}
+{% endblock %}
 </body>
 </html>

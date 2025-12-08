@@ -7,7 +7,7 @@ from ..models import tbl_editora
 # LISTAR EDITORAS --------------------------------------------------------
 
 class EditoraListView(View):
-    template_name = "adicionar_editora.html"
+    template_name = "editora/editora_form.html"
 
     def get(self, request):
         editoras = tbl_editora.objects.all()
@@ -17,7 +17,7 @@ class EditoraListView(View):
 #CRIAR EDITORA ----------------------------------------------------------
 
 class EditoraCreateView(View):
-    template_name = "adicionar_editora.html"
+    template_name = "editora/editora_form.html"
 
     def get(self, request):
         form = EditoraForm()
@@ -38,7 +38,7 @@ class EditoraCreateView(View):
 # EDITAR EDITORA ---------------------------------------------------------
 
 class EditoraUpdateView(View):
-    template_name = "adicionar_editora.html"
+    template_name = "editora/editora_form.html"
 
     def get(self, request, pk):
         editora = get_object_or_404(tbl_editora, pk=pk)
@@ -57,7 +57,7 @@ class EditoraUpdateView(View):
 # DELETAR EDITORA ---------------------------------------------------------
 
 class EditoraDeleteView(View):
-    template_name = "adicionar_editora.html"
+    template_name = "editora/editora_form.html"
 
     def get(self, request, pk):
         editora = get_object_or_404(tbl_editora, pk=pk)

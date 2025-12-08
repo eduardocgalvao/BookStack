@@ -2,7 +2,7 @@
 from django.urls import path
 
 from .views.livro_views import (
-    tela_todos_livros,
+    livro_list,
     LivroCreateView,
     api_livro_detail,
     api_livro_update,
@@ -38,7 +38,7 @@ from .views import (
     MotivoRemocaoCreateView,
     MotivoRemocaoUpdateView,
     MotivoRemocaoDeleteView,
-    tela_inicial,
+    home,
 )
 
 urlpatterns = [
@@ -46,10 +46,7 @@ urlpatterns = [
     path("", login_view, name="login"),
     
     # TELA INICIAL
-    path("tela_inicial/", tela_inicial, name="tela_inicial"),
-    
-    # TODOS OS LIVROS
-    path("todosLivros/", tela_todos_livros, name="tela_todos_livros"),
+    path('home/', home, name='home'),
     
     # API para livros
     path("api/livro/<int:livro_id>/", api_livro_detail, name="api_livro_detail"),
@@ -58,6 +55,7 @@ urlpatterns = [
     
     # LIVROS
     path("livro/novo/", LivroCreateView.as_view(), name="livro-create"),
+    path("livro/list/", livro_list, name="livro-list"),
     
     # AUTORES
     path("autores/", AutorListView.as_view(), name="autor-list"),

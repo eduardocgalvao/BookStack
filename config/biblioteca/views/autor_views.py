@@ -20,7 +20,7 @@ class AutorCRUDMixin:
 
 class AutorListView(View, AutorCRUDMixin):
     """View para listar autores."""
-    template_name = "adicionar_autor.html"
+    template_name = "autor/autor_form.html"
     model_class = tbl_autor
     
     def get(self, request):
@@ -28,7 +28,7 @@ class AutorListView(View, AutorCRUDMixin):
         return render(request, self.template_name, {"autores": autores})
 
 class AutorCreateView(View, AutorCRUDMixin):
-    template_name = "adicionar_autor.html"
+    template_name = "autor/autor_form.html"
     form_class = AutorForm
     model_class = tbl_autor
     
@@ -55,7 +55,7 @@ class AutorCreateView(View, AutorCRUDMixin):
 
 class AutorUpdateView(View, AutorCRUDMixin):
     """View para atualizar um autor existente."""
-    template_name = "adicionar_autor.html"
+    template_name = "autor/autor_form.html"
     form_class = AutorForm
     model_class = tbl_autor
     redirect_url = "autor-list"
@@ -75,7 +75,7 @@ class AutorUpdateView(View, AutorCRUDMixin):
 
 class AutorDeleteView(View, AutorCRUDMixin):
     """View para deletar um autor."""
-    template_name = "adicionar_autor.html"
+    template_name = "autor/autor_form.html"
     model_class = tbl_autor
     redirect_url = "autor-list"
     

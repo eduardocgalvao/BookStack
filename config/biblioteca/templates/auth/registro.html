@@ -6,10 +6,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Página de login -->
-    <title>Login - BookStack</title>
+    <title>Cadastro - BookStack</title>
 
-    <!-- CSS principal da tela -->
     <link rel="stylesheet" href="{% static 'css/login.css' %}" />
   </head>
 
@@ -17,62 +15,86 @@
     <main>
       <div class="container">
 
-        <!-- Logo do sistema -->
+        <!-- Logo -->
         <img src="{% static 'img/logo.png' %}" class="logo" alt="BookStack Logo" />
 
-        <h1>Inicie sua sessão</h1>
+        <h1>Criar Conta</h1>
 
         <div class="card">
-          <!-- Texto introdutório -->
-          <h2>Bem-vindo ao BookStack! Por favor, insira suas informações para continuar.</h2>
+          <h2>Preencha os dados para criar sua conta</h2>
 
           <hr />
 
-          <!-- Formulário de autenticação -->
+          <!-- FORM REGISTRO -->
           <form method="post" novalidate>
             {% csrf_token %}
 
             <div class="form-row">
-              <!-- Campo: Primeiro Nome -->
+              <!-- NOME -->
               <div class="form-group">
                 <label for="name">Primeiro Nome</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  placeholder="Digite seu Nome"
+                  placeholder="Digite seu nome"
                   required
                 />
               </div>
 
-              <!-- Campo: Sobrenome -->
+              <!-- SOBRENOME -->
               <div class="form-group">
                 <label for="surname">Sobrenome</label>
                 <input
                   type="text"
                   id="surname"
                   name="surname"
-                  placeholder="Digite seu Sobrenome"
+                  placeholder="Digite seu sobrenome"
                   required
                 />
               </div>
             </div>
 
-            <!-- Campo: E-mail -->
+            <!-- EMAIL -->
             <div class="form-group full">
               <label for="email">E-mail</label>
               <input
                 type="email"
                 id="email"
                 name="email"
-                placeholder="Digite seu E-mail"
+                placeholder="Digite seu e-mail"
                 required
               />
             </div>
 
-            <!-- Botão principal -->
-            <button type="submit">Iniciar minha Biblioteca</button>
+            <!-- SENHA -->
+            <div class="form-group full">
+              <label for="password">Senha</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Crie uma senha"
+                required
+              />
+            </div>
+
+            <!-- CONFIRMAR SENHA -->
+            <div class="form-group full">
+              <label for="password2">Confirmar Senha</label>
+              <input
+                type="password"
+                id="password2"
+                name="password2"
+                placeholder="Confirme sua senha"
+                required
+              />
+            </div>
+
+            <!-- BOTÃO -->
+            <button type="submit">Criar Conta</button>
           </form>
+
         </div>
       </div>
     </main>

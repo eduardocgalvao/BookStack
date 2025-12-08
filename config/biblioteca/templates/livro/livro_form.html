@@ -1,108 +1,95 @@
 <!-- biblioteca/templates/livro/livro_form.html -->
-{% extends 'base.html' %} {% load static %} {% block title %}Adicionar Livro -
-BookStack{% endblock %} {% block extra_css %}
-<!-- Arquivo CSS principal da página -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Adicionar Livro - BookStack{% endblock %}
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/livro_form.css' %}" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+{% endblock %}
 
-<!-- Biblioteca Select2 para selects avançados -->
-<link
-  href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-  rel="stylesheet"
-/>
-{% endblock %} {% block content %}
+{% block content %}
 
-<a href="{% url 'home' %}" class="voltar">←</a>
+<div class="page-wrapper">
 
-<!-- Container central que envolve o formulário -->
-<div class="container">
-  <!-- Título principal da página -->
-  <h1 class="titulo">Adicione um Novo Livro</h1>
+  <header class="top-header">
+    <a href="{% url 'home' %}" class="back-btn">←</a>
+    <h1 class="titulo">Adicionar Novo Livro</h1>
+  </header>
 
-  <!-- Formulário único usado para criar o livro -->
-  <form class="form" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+  <div class="container">
 
-    <!-- Campo de upload da capa -->
-    <div class="form-group">
-      <label for="{{ form.capa.id_for_label }}">Capa do Livro:</label>
-      {{ form.capa }}
+    <form class="form" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
 
-      <!-- Exibição de erros de validação -->
-      {% if form.capa.errors %}
-      <div class="error">{{ form.capa.errors }}</div>
-      {% endif %}
+      <div class="form-group full">
+        <label for="{{ form.capa.id_for_label }}">Capa do Livro</label>
+        {{ form.capa }}
+        {% if form.capa.errors %}
+          <div class="error">{{ form.capa.errors }}</div>
+        {% endif %}
+        <small class="form-text">JPG, PNG ou GIF • Máx. 5MB</small>
+      </div>
 
-      <!-- Texto auxiliar -->
-      <small class="form-text text-muted">
-        Formatos aceitos: JPG, PNG, GIF. Tamanho máximo: 5MB.
-      </small>
-    </div>
+      <div class="form-group">
+        <label>Título</label>
+        {{ form.titulo }}
+      </div>
 
-    <!-- Campo título -->
-    <div class="form-group">
-      <label>Título:</label>
-      {{ form.titulo }}
-    </div>
+      <div class="form-group">
+        <label>Editora</label>
+        {{ form.editora }}
+      </div>
 
-    <!-- Campo editora -->
-    <div class="form-group">
-      <label>Editora:</label>
-      {{ form.editora }}
-    </div>
+      <div class="form-group">
+        <label>ISBN</label>
+        {{ form.isbn }}
+      </div>
 
-    <!-- Campo ISBN -->
-    <div class="form-group">
-      <label>ISBN:</label>
-      {{ form.isbn }}
-    </div>
+      <div class="form-group">
+        <label>Status</label>
+        {{ form.status }}
+      </div>
 
-    <!-- Campo status -->
-    <div class="form-group">
-      <label>Status:</label>
-      {{ form.status }}
-    </div>
+      <div class="form-group">
+        <label>Ano de Publicação</label>
+        {{ form.ano_publicacao }}
+      </div>
 
-    <!-- Campo ano de publicação -->
-    <div class="form-group">
-      <label>Ano de publicação:</label>
-      {{ form.ano_publicacao }}
-    </div>
+      <div class="form-group">
+        <label>Autores</label>
+        {{ form.autores }}
+      </div>
 
-    <!-- Campo autores (select múltiplo) -->
-    <div class="form-group">
-      <label>Autores:</label>
-      {{ form.autores }}
-    </div>
+      <div class="form-group full">
+        <label>Categorias</label>
+        {{ form.categorias }}
+      </div>
 
-    <!-- Campo categorias (select múltiplo, ocupa largura total) -->
-    <div class="form-group full">
-      <label>Categorias:</label>
-      {{ form.categorias }}
-    </div>
-
-    <!-- Área do botão principal -->
-    <div class="btn-area">
-      <button type="submit" class="btn-add">Adicionar Livro</button>
-    </div>
-  </form>
+      <div class="btn-area full">
+        <button type="submit" class="btn-add">Salvar Livro</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<!-- POPUP de confirmação -->
+<!-- POPUP -->
 <div id="popup" class="popup hidden">
   <div class="popup-content">
-    <!-- Botão para fechar o popup -->
-    <button class="popup-close" onclick="fecharPopup()">X</button>
-
-    <!-- Mensagem principal -->
-    <h2>Livro Salvo <span class="check">✔️</span></h2>
-
-    <!-- Campos dinâmicos -->
-    <p>Id: <span id="popup-id"></span></p>
+    <button class="popup-close" onclick="fecharPopup()">×</button>
+    <h2>Livro salvo com sucesso ✔️</h2>
+    <p>ID: <span id="popup-id"></span></p>
     <p>Nome: <span id="popup-nome"></span></p>
   </div>
 </div>
-{% endblock %} {% block scripts %}
-<!-- Script: Funções do popup -->
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
   function abrirPopup(id, nome) {
     document.getElementById("popup-id").innerText = id;
@@ -113,16 +100,7 @@ BookStack{% endblock %} {% block extra_css %}
   function fecharPopup() {
     document.getElementById("popup").classList.add("hidden");
   }
-</script>
 
-<!-- jQuery necessário para Select2 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Select2 -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-<!-- Ativação dos selects múltiplos -->
-<script>
   $(document).ready(function () {
     $(".multi-select").select2({
       placeholder: "Selecione...",
@@ -131,9 +109,10 @@ BookStack{% endblock %} {% block extra_css %}
   });
 </script>
 
-<!-- Caso o livro tenha sido salvo com sucesso -->
-{% if sucesso %}
+{% if request.GET.sucesso %}
 <script>
-  abrirPopup("{{ livro_id }}", "{{ livro_nome }}");
+  abrirPopup("{{ request.GET.livro_id }}", "{{ request.GET.livro_nome }}");
 </script>
-{% endif %} {% endblock %}
+{% endif %}
+
+{% endblock %}

@@ -53,9 +53,18 @@ class StatusLivroForm(forms.ModelForm):
 
 # Formulário Usuários
 class UsuarioForm(forms.ModelForm):
+    senha = forms.CharField(widget=forms.PasswordInput)
+    
     class Meta:
         model = tbl_usuario
-        fields = ["nome", "sobrenome", "email"]
+        fields = ["nome", "sobrenome", "email", "senha"]
+        
+        def save(self, commit=True):
+            user = super().save(commit=False)
+            user.set_password(self.cleaned_data['senha'])
+            if commit:
+                user.save()
+            return user
 
 # Formulário Motivo Da Remoção
 class MotivoRemocaoForm(forms.ModelForm):

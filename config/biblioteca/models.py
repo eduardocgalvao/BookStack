@@ -1,6 +1,7 @@
 """Modelos de banco de dados para o sistema de biblioteca."""
 
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 import os
 
 class tbl_editora(models.Model):
@@ -109,14 +110,46 @@ class tbl_livro_categoria(models.Model):
     class Meta:
         unique_together = ('livro', 'categoria')  # Impede duplicação de registros
 
+class UsuarioManager(BaseUserManager):
+    def create_user(self, email, nome, sobrenome, password=None):
+        if not email:
+            raise ValueError("O usuário precisa de um e-mail")
 
-class tbl_usuario(models.Model):
-    """Armazena dados dos usuários do sistema de biblioteca."""
+        email = self.normalize_email(email)
+        user = self.model(
+            email=email,
+            nome=nome,
+            sobrenome=sobrenome
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, nome, sobrenome, password):
+        user = self.create_user(email, nome, sobrenome, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+    
+class tbl_usuario(AbstractBaseUser, PermissionsMixin):
     id_usuario = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=255)
     sobrenome = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
 
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    objects = UsuarioManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nome', 'sobrenome']
+
+    def __str__(self):
+        return self.email
 
 class tbl_motivo_remocao(models.Model):
     """Define os motivos pelos quais um livro pode ser removido do acervo."""

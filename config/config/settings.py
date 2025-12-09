@@ -153,6 +153,9 @@ AUTHENTICATION_BACKENDS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+AUTH_USER_MODEL = 'biblioteca.tbl_usuario'
+
+
 # Configuração para servir arquivos de mídia em modo de desenvolvimento
 if DEBUG:
     from django.conf.urls.static import static

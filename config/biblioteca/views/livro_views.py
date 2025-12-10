@@ -1,4 +1,5 @@
 """Views para gerenciamento de livros."""
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -63,7 +64,7 @@ def livro_list(request):
         # Contar empréstimos ativos
         emprestados_ativos = Emprestimo.objects.filter(
             livro=livro,
-            status='Disponível'
+            dt_devolucao_real__isnull=True,
         ).count()
         
         # Calcular disponível
@@ -80,12 +81,14 @@ def livro_list(request):
     editoras = tbl_editora.objects.all()
     categorias = tbl_categoria.objects.all()
     autores = tbl_autor.objects.all()
+    status_list = tbl_status_livro.objects.filter(ativo=True)
     
     return render(request, 'livro/livro_list.html', {
         'livros_com_relacionados': livros_com_relacionados,
         'editoras': editoras,
         'categorias': categorias,
         'autores': autores,
+        'status_list': status_list,
         'hoje': timezone.now().date(),
         'data_padrao': timezone.now().date() + timedelta(days=10)
     })
@@ -197,8 +200,6 @@ def api_livro_update(request, livro_id):
         try:
             livro = get_object_or_404(tbl_livro, id_livro=livro_id)
             
-            # 1. UNIFICAÇÃO DOS DADOS (O Segredo para corrigir o erro)
-            # Inicializamos 'data' vazia e preenchemos conforme o tipo de envio
             data = {}
             files = {}
 
@@ -214,9 +215,21 @@ def api_livro_update(request, livro_id):
                     data = {}
 
             print(f"DEBUG: Dados processados: {data}")
-
-            # 2. ATUALIZAÇÃO DOS CAMPOS BÁSICOS (Funciona para os dois casos agora)
-            # Usamos .get() para pegar o valor novo ou manter o antigo se não vier nada
+            
+            # DEBUG DETALHADO DO STATUS
+            print(f"DEBUG: Status atual do livro: {livro.status.descricao if livro.status else 'None'}")
+            print(f"DEBUG: status_id recebido: {data.get('status_id')}")
+            
+            if 'status_id' in data and data['status_id']:
+                try:
+                    status_obj = tbl_status_livro.objects.get(id_status=data['status_id'])
+                    
+                    livro.status = status_obj
+                    print(f"DEBUG: Status atualizado para: {status_obj.descricao}")
+                except tbl_status_livro.DoesNotExist:
+                    print(f"DEBUG: Status ID {data['status_id']} não encontrado")
+            else:
+                print("DEBUG: Nenhum status_id fornecido nos dados")
             
             if 'titulo' in data:
                 livro.titulo = data['titulo']
@@ -237,8 +250,6 @@ def api_livro_update(request, livro_id):
                 except tbl_editora.DoesNotExist:
                     return JsonResponse({'success': False, 'error': 'Editora inválida'}, status=404)
 
-            # 3. ATUALIZAÇÃO DA IMAGEM (CAPA)
-            # Verifica se veio arquivo físico ou flag de remoção
             if 'capa' in files:
                 print("DEBUG: Salvando nova capa...")
                 livro.capa = files['capa']
@@ -303,7 +314,6 @@ def api_livro_update(request, livro_id):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
     return JsonResponse({'success': False, 'error': 'Método inválido'}, status=405)
-
 
 @csrf_exempt
 @require_http_methods(["DELETE"])
@@ -406,9 +416,6 @@ class AssociarCategoriaView(View):
 # VIEW ADICIONAL PARA POPULAR DATAS FALTANTES
 def popular_datas_livros(request):
     """View para popular datas de criação/atualização para livros que não tem."""
-    from django.utils import timezone
-    from django.http import HttpResponse
-    
     livros_sem_data = tbl_livro.objects.filter(dt_criacao__isnull=True)
     count = 0
     

@@ -35,8 +35,12 @@ function setupEventListeners() {
                 if(document.getElementById("edit-quantidade")) {
                     document.getElementById("edit-quantidade").value = livro.quantidade || '';
                 };
-                //document.getElementById("edit-categoria").value = livro.categoria_id || '';
-                
+
+                // Preencher o status
+                if (livro.status_id && document.getElementById('edit-status-select')) {
+                    document.getElementById('edit-status-select').value = livro.status_id;
+                    console.log("Status preenchido:", livro.status_id);
+                }
                 
                 // Inicializa Select2 se ainda não foi
                 if (window.inicializarSelect2Autores) {
@@ -194,6 +198,10 @@ function setupEventListeners() {
             // Pega as categorias selecionadas no Select2
             const categoriasSelecionadas = $('#edit-categoria').val() || [];
             console.log("Categorias selecionadas:", categoriasSelecionadas);
+
+            // pega o status selecionado
+            const statusSelecionado = $('#edit-status-select').val();
+            console.log("Status selecionado:", statusSelecionado);
             
             let result;
             
@@ -205,9 +213,12 @@ function setupEventListeners() {
                 formData.append('titulo', document.getElementById("edit-titulo").value);
                 formData.append('editora_id', document.getElementById("edit-editora").value);
                 formData.append('ano_publicacao', document.getElementById("edit-ano").value);
-                formData.append('quantidade', document.getElementById('edit-quantidade').value);
-                //formData.append('categoria_id', document.getElementById("edit-categoria").value);
-                
+                formData.append('quantidade', document.getElementById('edit-quantidade').value)
+
+                // Status
+                if (statusSelecionado) {
+                    formData.append('status_id', statusSelecionado);
+                }
                 
                 // Adiciona autores como JSON string
                 formData.append('autores_ids', JSON.stringify(autoresSelecionados));
@@ -241,6 +252,11 @@ function setupEventListeners() {
                     autores_ids: autoresSelecionados,
                     categorias_ids: categoriasSelecionadas
                 };
+
+                // Status
+                if (statusSelecionado) {
+                    formData.status_id = statusSelecionado;
+                }
                 
                 console.log("Enviando JSON sem capa");
                 result = await window.updateLivro(window.livroParaEditar, formData, false);

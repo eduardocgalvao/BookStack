@@ -25,6 +25,9 @@ async function fetchLivro(id) {
         
         const data = await response.json();
         console.log("Dados recebidos:", data);
+        console.log("Status ID recebido:", data.status_id);
+        console.log("Status texto recebido:", data.status);
+        
         return data;
         
     } catch (error) {

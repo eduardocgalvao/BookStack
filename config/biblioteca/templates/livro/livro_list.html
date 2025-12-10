@@ -166,7 +166,16 @@
                     </select>
                 </div>
 
-                <input type="hidden" id="edit-status" name="status_id">
+                <!-- Status -->
+                <div class="campo">
+                    <label for="edit-status-select">Status *</label>
+                    <select id="edit-status-select" name="status_id" required>
+                        <option value="">Selecione...</option>
+                        {% for status in status_list %}
+                            <option value="{{ status.id_status }}">{{ status.descricao|title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
                 <!-- Autores (Select2) -->
                 <div class="campo">
@@ -358,4 +367,4 @@
     
     <!-- 7. Sistema de empréstimos -->
     <script src="{% static 'js/livro/emprestimo.js' %}"></script>
-{% endblock %}
+{% endblock %}``

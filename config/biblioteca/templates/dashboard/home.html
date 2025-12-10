@@ -34,7 +34,7 @@
                     <img src="{{ livro.capa.url }}" 
                          alt="{{ livro.titulo }}" 
                          loading="lazy"
-                         onerror="this.src='{% static 'img/placeholder.png' %}'">
+                         onerror=this.src="{% static 'img/placeholder.png' %}">
                 {% else %}
                     <img src="{% static 'img/placeholder.png' %}" 
                          alt="Capa não disponível" 

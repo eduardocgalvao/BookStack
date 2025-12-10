@@ -8,13 +8,13 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/categoria_form.css' %}" />
 {% endblock %} {% block content %}
-<!-- Botão para voltar para a tela inicial -->
-<a href="{% url 'home' %}" class="back-btn">←</a>
 
 <!-- Cabeçalho superior com logo e título -->
 <div class="top-header">
   <img src="{% static 'img/logo.png' %}" class="logo" alt="Logo BookStack" />
   <h1 class="titulo">Adicionar Categoria</h1>
+  <!-- Botão para voltar para a tela inicial -->
+  <a href="{% url 'home' %}" class="back-btn">←</a>
 </div>
 
 <!-- Container principal -->

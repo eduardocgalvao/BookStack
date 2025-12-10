@@ -1,9 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap');
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Lexend', sans-serif;
     background: #f5f7fa;
     margin: 0;
+    padding: 0;
+    min-height: 100vh;
 }
 
 .back-btn {
@@ -14,6 +20,11 @@ body {
     text-decoration: none;
     color: black;
     cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    z-index: 10;
 }
 
 .back-btn:hover {
@@ -23,22 +34,29 @@ body {
 .top-header {
     text-align: center;
     margin-top: 40px;
+    padding-top: 20px;
+    position: relative;
 }
 
 .logo {
     width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
 .titulo {
     margin-top: 5px;
     font-size: 32px;
     color: #003b4a;
+    text-align: center;
 }
 
 /* Card */
 .container {
     background: white;
     width: 70%;
+    max-width: 900px;
     margin: 40px auto;
     padding: 45px;
     border-radius: 12px;
@@ -53,47 +71,89 @@ body {
 }
 
 /* Campo */
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
 .campo label {
     font-size: 14px;
     font-weight: 600;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    color: #333;
 }
 
-.campo input {
+.campo input,
+.campo select,
+.campo textarea {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 15px;
     border: 1px solid #bad7e3;
     border-radius: 5px;
     outline: none;
-    font-weight: 600;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 400;
     color: #1c1c1c;
     font-size: 14px;
+    background: white;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.campo input:focus {
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
     border-color: #004A46;
     box-shadow: 0 0 5px rgba(75, 193, 210, 0.5);
 }
 
+/* Mensagens de erro */
+.error {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 5px;
+    font-weight: 400;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+    grid-column: 1 / -1;
+}
+
+.error-message p {
+    margin: 0;
+    font-size: 14px;
+}
+
 /* Botão */
 .btn-area {
-    margin-top: 30px;
+    margin-top: 40px;
     text-align: center;
+    grid-column: 1 / -1;
 }
 
 .btn-add {
     background: #0e9c99;
     color: white;
     border: none;
-    padding: 10px 35px;
+    padding: 12px 40px;
     border-radius: 6px;
-    font-size: 15px;
+    font-size: 16px;
     cursor: pointer;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn-add:hover {
     background: #008E87;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Popup */
@@ -107,20 +167,36 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s;
 }
 
 .popup.hidden {
     display: none;
+    opacity: 0;
 }
 
 .popup-content {
     background: white;
-    padding: 25px 40px;
+    padding: 30px 40px;
     border-radius: 12px;
-    width: 320px;
+    width: 350px;
     text-align: center;
-    box-shadow: 0 0 12px rgba(0,0,0,0.3);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
     position: relative;
+    animation: popupFadeIn 0.3s ease-out;
+}
+
+@keyframes popupFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .popup-close {
@@ -131,13 +207,117 @@ body {
     background: transparent;
     font-size: 20px;
     cursor: pointer;
+    color: #666;
+    padding: 5px;
+    line-height: 1;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-close:hover {
+    color: #333;
+    background-color: #f5f5f5;
+    border-radius: 50%;
 }
 
 .popup-content h2 {
     margin-top: 10px;
     color: #007c7a;
+    margin-bottom: 20px;
+    font-size: 24px;
 }
 
 .check {
     font-size: 28px;
+    margin-left: 10px;
+}
+
+.popup-content p {
+    margin: 12px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.popup-content span {
+    font-weight: 600;
+    color: #004A46;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .container {
+        width: 85%;
+        padding: 35px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 25px;
+        margin: 20px auto;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .titulo {
+        font-size: 28px;
+    }
+    
+    .top-header {
+        margin-top: 30px;
+    }
+    
+    .back-btn {
+        top: 20px;
+        left: 20px;
+        font-size: 22px;
+    }
+    
+    .logo {
+        width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .popup-content {
+        width: 90%;
+        padding: 25px 20px;
+        margin: 0 15px;
+    }
+    
+    .btn-add {
+        padding: 12px 30px;
+        width: 100%;
+    }
+    
+    .form-grid {
+        gap: 20px;
+    }
+}
+
+/* Melhorias de acessibilidade */
+input:focus,
+button:focus,
+.popup-close:focus {
+    border-color: #004A46;
+    box-shadow: 0 0 5px rgba(75, 193, 210, 0.5);
+}
+
+/* Para navegadores mais antigos */
+input:focus,
+button:focus,
+.popup-close:focus {
+    border-color: #004A46;
+    box-shadow: 0 0 5px rgba(75, 193, 210, 0.5);
 }

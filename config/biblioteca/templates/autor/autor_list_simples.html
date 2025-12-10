@@ -1,0 +1,141 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Autores cadastrados{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/autor_list_simples.css' %}" />
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="autores-container">
+        <header class="top-bar">
+            <a href="{% url 'home' %}" class="voltar">←</a>
+            <h1>Autores cadastrados</h1>
+        </header>
+
+        <main class="card-tabela">
+            <table class="tabela-autores">
+                <thead>
+                    <tr>
+                        <th class="acoes-col"></th>
+                        <th>Nome</th>
+                        <th>Sobrenome</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for autor in autores %}
+                    <tr data-id="{{ autor.id_autor }}" data-nome="{{ autor.nome }}" data-sobrenome="{{ autor.sobrenome }}">
+                        <td class="acoes-cell">
+                            <button type="button" class="btn btn-edit" data-action="edit" title="Editar">✏️</button>
+                            <button type="button" class="btn btn-delete" data-action="delete" title="Excluir">🗑️</button>
+                        </td>
+                        <td data-label="Nome">{{ autor.nome }}</td>
+                        <td data-label="Sobrenome">{{ autor.sobrenome }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="empty-message">Nenhum autor cadastrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- Modal de Edição  -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h3>Editar Autor</h3>
+
+            <form id="edit-form" method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" id="edit-id" name="autor_id" />
+
+                <div class="form-grid">
+                    <div class="campo">
+                        <label for="edit-nome">Nome *</label>
+                        <input type="text" id="edit-nome" name="nome" />
+                    </div>
+
+                    <div class="campo">
+                        <label for="edit-sobrenome">Sobrenome</label>
+                        <input type="text" id="edit-sobrenome" name="sobrenome" />
+                    </div>
+                </div>
+
+                <div class="btn-area">
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Exclusão (estilo Livro) -->
+    <div id="delete-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h3>Confirmar Exclusão</h3>
+            <p id="delete-msg">Tem certeza que deseja excluir este autor?</p>
+            <form id="delete-form" method="post" action="">
+                {% csrf_token %}
+                <div class="btn-area">
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-confirmar-exclusao">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const editModal = document.getElementById('edit-modal');
+    const deleteModal = document.getElementById('delete-modal');
+    const editForm = document.getElementById('edit-form');
+    const deleteForm = document.getElementById('delete-form');
+
+    function openModal(modal){ modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false'); }
+    function closeModal(modal){ modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); }
+
+    document.querySelector('.tabela-autores').addEventListener('click', function(e){
+        const btn = e.target.closest('button');
+        if(!btn) return;
+        const tr = btn.closest('tr');
+        const id = tr && tr.dataset.id;
+        const nome = tr && tr.dataset.nome;
+        const sobrenome = tr && tr.dataset.sobrenome;
+        const action = btn.dataset.action;
+
+        if(action === 'edit'){
+            editForm.action = `/autores/${id}/editar/`;
+            document.getElementById('edit-nome').value = nome || '';
+            document.getElementById('edit-sobrenome').value = sobrenome || '';
+            openModal(editModal);
+        }
+
+        if(action === 'delete'){
+            deleteForm.action = `/autores/${id}/deletar/`;
+            document.getElementById('delete-msg').textContent = `Tem certeza que deseja excluir "${nome} ${sobrenome}"?`;
+            openModal(deleteModal);
+        }
+    });
+
+    // Fechar ao clicar no X ou no botão cancelar
+    document.querySelectorAll('.close-modal').forEach(function(el){ el.addEventListener('click', function(){
+        const modal = el.closest('.modal'); if(modal) closeModal(modal);
+    }); });
+
+    document.querySelectorAll('.btn-cancelar').forEach(function(btn){ btn.addEventListener('click', function(){ const modal = btn.closest('.modal'); if(modal) closeModal(modal); }); });
+
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ const modals = document.querySelectorAll('.modal:not(.hidden)'); modals.forEach(m=> closeModal(m)); } });
+});
+</script>
+{% endblock %}

@@ -1,15 +1,24 @@
 <!-- templates/dashboard/modal_catalago.html -->
-<div id="bookModal" class="modal-overlay" onclick="closeModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+<div id="bookModal" class="modal-overlay" onclick="closeModal(event)" style="display: none;">
+    <div class="modal-content" onclick="event.stopPropagation()" role="document">
         <div class="modal-header">
-            <h2 class="modal-title" id="modalBookTitle">Carregando...</h2>
-            <button class="modal-close" onclick="closeModal(event)">&times;</button>
+            <h2 class="modal-title" id="modalBookMainTitle">Carregando...</h2>
+            <button class="modal-close" onclick="closeModal(event)" aria-label="Fechar modal">
+                &times;
+            </button>
         </div>
         
         <div class="modal-body">
             <div class="book-detail-grid">
                 <div class="book-detail-cover">
-                    <img id="modalBookCover" src="" alt="Capa do livro">
+                    <img id="modalBookCover" src="" alt="Capa do livro" loading="lazy">
                 </div>
                 
                 <div class="book-detail-info">
@@ -76,7 +85,7 @@
                     📥 Emprestar Livro
                 </button>
                 {% else %}
-                <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary">
+                <a href="{% url 'login' %}?next={% url 'livro_list' %}" class="btn btn-primary">
                     🔑 Fazer Login para Emprestar
                 </a>
                 {% endif %}

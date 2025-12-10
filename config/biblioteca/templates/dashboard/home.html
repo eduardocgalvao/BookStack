@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="content">
+<div class="page-content">
     <form method="GET" class="search-box">
         <input
             type="text"
@@ -17,35 +17,40 @@
             placeholder="Procurar por nome do livro, autor, categoria ou ISBN..."
             value="{{ query|default:'' }}"
             autocomplete="off"
+            aria-label="Buscar livros"
         />
         <button type="submit" style="display:none;">Buscar</button>
     </form>
 
-    <h1 class="title">Catálogo de Livros</h1>
+    <h1 class="page-title">Catálogo de Livros</h1>
 
     <section class="books-grid">
         {% for item in livros_com_relacionados %}
             {% with livro=item.livro %}
-            <div class="book-card" onclick="openBookModal('{{ livro.id_livro }}')" 
+            <div class="book-card" 
+                 onclick="openBookModal('{{ livro.id_livro }}')" 
                  data-book-id="{{ livro.id_livro }}"
+                 role="button"
+                 tabindex="0"
+                 aria-label="Ver detalhes de {{ livro.titulo }}"
                  title="Clique para ver detalhes">
                 
-                {% if livro.capa %}
+                {% if livro.capa and livro.capa.url %}
                     <img src="{{ livro.capa.url }}" 
-                         alt="{{ livro.titulo }}" 
+                         alt="Capa de {{ livro.titulo }}" 
                          loading="lazy"
-                         onerror=this.src="{% static 'img/placeholder.png' %}">
+                         onerror="this.src='{% static 'img/placeholder.png' %}'">
                 {% else %}
                     <img src="{% static 'img/placeholder.png' %}" 
-                         alt="Capa não disponível" 
+                         alt="Capa não disponível para {{ livro.titulo }}" 
                          loading="lazy">
                 {% endif %}
 
-                <p class="titulo">{{ livro.titulo }}</p>
+                <p class="book-title">{{ livro.titulo }}</p>
 
-                {% if item.disponivel %}
+                {% if item.disponivel > 0 %}
                     <span class="status disponivel">
-                        Disponível ({{ item.quantidade_disponivel }})
+                        Disponível
                     </span>
                 {% else %}
                     <span class="status indisponivel">
@@ -63,14 +68,79 @@
     </section>
 </div>
 
-<!-- Modal -->
+<!-- Modal de Detalhes -->
 {% include 'dashboard/modal_catalago.html' %}
 {% endblock %}
 
-{% block extra_js %}
+{% block scripts %}
 <script src="{% static 'js/home.js' %}"></script>
 <script>
-// Debug: verificar se o script está carregando
-console.log('Template home.html carregado');
+// Funções globais para o modal
+function openBookModal(livroId) {
+    console.log('Abrindo modal para livro ID:', livroId);
+    
+    // Buscar dados do livro via AJAX
+    fetch(`/api/livro/${livroId}/`)
+        .then(response => response.json())
+        .then(data => {
+            // Preencher modal com os dados
+            document.getElementById('modalBookMainTitle').textContent = data.titulo;
+            document.getElementById('modalBookTitleText').textContent = data.titulo;
+            document.getElementById('modalBookAuthors').textContent = data.autores || 'Não informado';
+            document.getElementById('modalBookPublisher').textContent = data.editora || 'Não informado';
+            document.getElementById('modalBookCategories').textContent = data.categorias || 'Não informado';
+            document.getElementById('modalBookISBN').textContent = data.isbn || 'Não informado';
+            document.getElementById('modalBookYear').textContent = data.ano_publicacao || 'Não informado';
+            document.getElementById('modalBookQuantity').textContent = data.quantidade || '0';
+            document.getElementById('modalBookAvailable').textContent = data.disponivel || '0';
+            document.getElementById('modalBookStatus').textContent = data.status || 'Não informado';
+            document.getElementById('modalBookCreated').textContent = data.dt_criacao || 'Não informado';
+            document.getElementById('modalBookDescription').textContent = data.descricao || 'Sem descrição';
+            
+            // Capa
+            const coverImg = document.getElementById('modalBookCover');
+            if (data.capa_url) {
+                coverImg.src = data.capa_url;
+                coverImg.alt = `Capa de ${data.titulo}`;
+            } else {
+                coverImg.src = '{% static "img/placeholder.png" %}';
+                coverImg.alt = 'Capa não disponível';
+            }
+            
+            // Botão de empréstimo
+            const emprestarBtn = document.getElementById('btnEmprestar');
+            if (emprestarBtn) {
+                emprestarBtn.dataset.livroId = livroId;
+                emprestarBtn.disabled = !(data.disponivel > 0);
+            }
+            
+            // Mostrar modal
+            document.getElementById('bookModal').style.display = 'flex';
+        })
+        .catch(error => {
+            console.error('Erro ao carregar dados do livro:', error);
+            alert('Não foi possível carregar os detalhes do livro.');
+        });
+}
+
+function closeModal(event) {
+    if (event) event.stopPropagation();
+    document.getElementById('bookModal').style.display = 'none';
+}
+
+function goToLoan() {
+    const btn = document.getElementById('btnEmprestar');
+    const livroId = btn ? btn.dataset.livroId : null;
+    if (livroId) {
+        window.location.href = `/emprestimo/criar/${livroId}/`;
+    }
+}
+
+// Fechar modal com ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
 </script>
 {% endblock %}

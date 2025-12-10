@@ -10,62 +10,75 @@
 
 {% block content %}
 <div class="page-content">
-    <form method="GET" class="search-box">
+    <form method="GET" class="search-box" role="search">
+        <label for="search-input" class="sr-only">Buscar livros</label>
         <input
             type="text"
+            id="search-input"
             name="q"
             placeholder="Procurar por nome do livro, autor, categoria ou ISBN..."
             value="{{ query|default:'' }}"
             autocomplete="off"
             aria-label="Buscar livros"
         />
-        <button type="submit" style="display:none;">Buscar</button>
+        <button type="submit" class="sr-only">Buscar</button>
     </form>
 
     <h1 class="page-title">Catálogo de Livros</h1>
 
-    <section class="books-grid">
+    {% if livros_com_relacionados %}
+    <section class="books-grid" aria-label="Lista de livros">
         {% for item in livros_com_relacionados %}
             {% with livro=item.livro %}
-            <div class="book-card" 
-                 onclick="openBookModal('{{ livro.id_livro }}')" 
-                 data-book-id="{{ livro.id_livro }}"
-                 role="button"
-                 tabindex="0"
-                 aria-label="Ver detalhes de {{ livro.titulo }}"
-                 title="Clique para ver detalhes">
+            <article class="book-card" 
+                     onclick="openBookModal('{{ livro.id_livro }}')" 
+                     onkeydown="if(event.key === 'Enter' || event.key === ' ') openBookModal('{{ livro.id_livro }}')"
+                     data-book-id="{{ livro.id_livro }}"
+                     role="button"
+                     tabindex="0"
+                     aria-label="Ver detalhes de {{ livro.titulo }}"
+                     title="Clique para ver detalhes de {{ livro.titulo }}">
                 
-                {% if livro.capa and livro.capa.url %}
-                    <img src="{{ livro.capa.url }}" 
-                         alt="Capa de {{ livro.titulo }}" 
-                         loading="lazy"
-                         onerror="this.src='{% static 'img/placeholder.png' %}'">
-                {% else %}
-                    <img src="{% static 'img/placeholder.png' %}" 
-                         alt="Capa não disponível para {{ livro.titulo }}" 
-                         loading="lazy">
-                {% endif %}
+                <div class="book-cover">
+                    {% if livro.capa and livro.capa.url %}
+                        <img src="{{ livro.capa.url }}" 
+                             alt="Capa de {{ livro.titulo }}" 
+                             loading="lazy"
+                             onerror="this.src='{% static 'img/placeholder.png' %}'">
+                    {% else %}
+                        <img src="{% static 'img/placeholder.png' %}" 
+                             alt="Capa não disponível para {{ livro.titulo }}" 
+                             loading="lazy">
+                    {% endif %}
+                </div>
 
-                <p class="book-title">{{ livro.titulo }}</p>
+                <div class="book-info">
+                    <h3 class="book-title">{{ livro.titulo }}</h3>
 
-                {% if item.disponivel > 0 %}
-                    <span class="status disponivel">
-                        Disponível
-                    </span>
-                {% else %}
-                    <span class="status indisponivel">
-                        Indisponível
-                    </span>
-                {% endif %}
-            </div>
+                    <div class="book-meta">
+                        {% if item.disponivel > 0 %}
+                            <span class="status disponivel" aria-label="Disponível">
+                                Disponível
+                            </span>
+                        {% else %}
+                            <span class="status indisponivel" aria-label="Indisponível">
+                                Indisponível
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
             {% endwith %}
-        {% empty %}
-            <p class="no-books">
-                📚 Nenhum livro encontrado. 
-                {% if query %}Tente outra busca.{% endif %}
-            </p>
         {% endfor %}
     </section>
+    {% else %}
+    <div class="no-results" role="alert">
+        <p class="no-books">
+            📚 Nenhum livro encontrado. 
+            {% if query %}Tente outra busca.{% endif %}
+        </p>
+    </div>
+    {% endif %}
 </div>
 
 <!-- Modal de Detalhes -->

@@ -13,6 +13,7 @@ from .views.livro_views import (
 )
 
 from .views import (
+    home_view,
     login_view,
     AutorListView,
     AutorCreateView,
@@ -45,14 +46,20 @@ from .views import (
     # emprestimo_list
 )
 
+# View para o modal
+from .views.home_view import livro_dados_json  # Adicione esta linha
+from .views.home_view import listar_livros  # Adicione esta linha se necessário
+
 urlpatterns = [
     # LOGIN
     path("", login_view, name="login"),
     path("registro/", registro_view, name="registro"),
 
+    # TELA INICIAL (HOME)
+    path('home/', listar_livros, name='home'),  # Use listar_livros
     
-    # TELA INICIAL
-    path('home/', home, name='home'),
+    # API para dados do livro (para o modal)
+    path('dados-livro/<int:livro_id>/', livro_dados_json, name='livro_dados_json'),
     
     # API para livros
     path("api/livro/<int:livro_id>/", api_livro_detail, name="api_livro_detail"),

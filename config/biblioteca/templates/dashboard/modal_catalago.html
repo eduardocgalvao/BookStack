@@ -1,0 +1,90 @@
+<!-- templates/dashboard/modal_catalago.html -->
+<div id="bookModal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalBookTitle">Carregando...</h2>
+            <button class="modal-close" onclick="closeModal(event)">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="book-detail-grid">
+                <div class="book-detail-cover">
+                    <img id="modalBookCover" src="" alt="Capa do livro">
+                </div>
+                
+                <div class="book-detail-info">
+                    <div class="detail-row">
+                        <span class="detail-label">📚 Título:</span>
+                        <span class="detail-value" id="modalBookTitleText"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">👤 Autor(es):</span>
+                        <span class="detail-value" id="modalBookAuthors"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">🏢 Editora:</span>
+                        <span class="detail-value" id="modalBookPublisher"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">🏷️ Categoria(s):</span>
+                        <span class="detail-value" id="modalBookCategories"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">🔢 ISBN:</span>
+                        <span class="detail-value" id="modalBookISBN"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">📅 Ano:</span>
+                        <span class="detail-value" id="modalBookYear"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">📦 Quantidade:</span>
+                        <span class="detail-value" id="modalBookQuantity"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">📊 Disponível:</span>
+                        <span class="detail-value" id="modalBookAvailable"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">📈 Status:</span>
+                        <span class="detail-value" id="modalBookStatus"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">📅 Cadastrado em:</span>
+                        <span class="detail-value" id="modalBookCreated"></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">📝 Descrição:</span>
+                        <div class="detail-value book-description" id="modalBookDescription"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                {% if user.is_authenticated %}
+                <button id="btnEmprestar" class="btn btn-primary" onclick="goToLoan()">
+                    📥 Emprestar Livro
+                </button>
+                {% else %}
+                <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary">
+                    🔑 Fazer Login para Emprestar
+                </a>
+                {% endif %}
+                
+                <button class="btn btn-secondary" onclick="closeModal(event)">
+                    ✕ Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

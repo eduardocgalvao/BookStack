@@ -1,37 +1,76 @@
-<!-- templates/livro/list.html -->
+<!-- templates/dashboard/home.html -->
 {% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Catálogo de Livros - BookStack{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
 {% block content %}
-  <!-- Busca por título -->
-  <form method="GET" class="search-box">
-    <input
-      type="text"
-      name="q"
-      placeholder="Procurar por nome do livro..."
-      value="{{ query|default:'' }}"
-    />
-  </form>
+<div class="content">
+    <form method="GET" class="search-box">
+        <input
+            type="text"
+            name="q"
+            placeholder="Procurar por nome do livro, autor, categoria ou ISBN..."
+            value="{{ query|default:'' }}"
+            autocomplete="off"
+        />
+        <button type="submit" style="display:none;">Buscar</button>
+    </form>
 
-  <h1 class="title">Catálogo de Livros</h1>
+    <h1 class="title">Catálogo de Livros</h1>
 
-  <section class="books-grid">
-    {% for livro in livros %}
-    <div class="book-card">
-      <!-- Capa do livro -->
-      {% if livro.capa %}
-      <img src="{{ livro.capa.url }}" alt="{{ livro.titulo }}" />
-      {% else %}
-      <img src="{% static 'img/placeholder.png' %}" alt="Sem capa" />
-      {% endif %}
+    <section class="books-grid">
+        {% for item in livros_com_relacionados %}
+            {% with livro=item.livro %}
+            <div class="book-card" onclick="openBookModal('{{ livro.id_livro }}')" 
+                 data-book-id="{{ livro.id_livro }}"
+                 title="Clique para ver detalhes">
+                
+                {% if livro.capa %}
+                    <img src="{{ livro.capa.url }}" 
+                         alt="{{ livro.titulo }}" 
+                         loading="lazy"
+                         onerror="this.src='{% static 'img/placeholder.png' %}'">
+                {% else %}
+                    <img src="{% static 'img/placeholder.png' %}" 
+                         alt="Capa não disponível" 
+                         loading="lazy">
+                {% endif %}
 
-      <p>{{ livro.titulo }}</p>
-    </div>
-    {% empty %}
-    <!-- Lista vazia -->
-    <p>Nenhum livro encontrado.</p>
-    {% endfor %}
-  </section>
+                <p class="titulo">{{ livro.titulo }}</p>
+
+                {% if item.disponivel %}
+                    <span class="status disponivel">
+                        Disponível ({{ item.quantidade_disponivel }})
+                    </span>
+                {% else %}
+                    <span class="status indisponivel">
+                        Indisponível
+                    </span>
+                {% endif %}
+            </div>
+            {% endwith %}
+        {% empty %}
+            <p class="no-books">
+                📚 Nenhum livro encontrado. 
+                {% if query %}Tente outra busca.{% endif %}
+            </p>
+        {% endfor %}
+    </section>
+</div>
+
+<!-- Modal -->
+{% include 'dashboard/modal_catalago.html' %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/home.js' %}"></script>
+<script>
+// Debug: verificar se o script está carregando
+console.log('Template home.html carregado');
+</script>
 {% endblock %}

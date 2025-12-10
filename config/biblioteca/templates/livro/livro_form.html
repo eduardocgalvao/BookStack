@@ -1,6 +1,10 @@
 <!-- biblioteca/templates/livro/livro_form.html -->
-{% extends 'base.html' %} {% load static %} {% block title %}Adicionar Livro -
-BookStack{% endblock %} {% block extra_css %}
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block title %}Adicionar Livro - BookStack{% endblock %} 
+
+{% block extra_css %}
 <!-- Arquivo CSS principal da página -->
 <link rel="stylesheet" href="{% static 'css/livro_form.css' %}" />
 
@@ -9,9 +13,15 @@ BookStack{% endblock %} {% block extra_css %}
   href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
   rel="stylesheet"
 />
-{% endblock %} {% block content %}
+{% endblock %} 
 
-<a href="{% url 'home' %}" class="voltar">←</a>
+{% block content %}
+
+<!-- Header com botão de voltar -->
+<div class="top-header">
+    <a href="{% url 'home' %}" class="back-btn">←</a>
+    <img src="{% static 'img/logo.png' %}" alt="Logo BookStack" class="logo">
+</div>
 
 <!-- Container central que envolve o formulário -->
 <div class="container">
@@ -40,45 +50,65 @@ BookStack{% endblock %} {% block extra_css %}
 
     <!-- Campo título -->
     <div class="form-group">
-      <label>Título:</label>
+      <label for="{{ form.titulo.id_for_label }}">Título:</label>
       {{ form.titulo }}
+      {% if form.titulo.errors %}
+      <div class="error">{{ form.titulo.errors }}</div>
+      {% endif %}
     </div>
 
     <!-- Campo editora -->
     <div class="form-group">
-      <label>Editora:</label>
+      <label for="{{ form.editora.id_for_label }}">Editora:</label>
       {{ form.editora }}
+      {% if form.editora.errors %}
+      <div class="error">{{ form.editora.errors }}</div>
+      {% endif %}
     </div>
 
     <!-- Campo ISBN -->
     <div class="form-group">
-      <label>ISBN:</label>
+      <label for="{{ form.isbn.id_for_label }}">ISBN:</label>
       {{ form.isbn }}
+      {% if form.isbn.errors %}
+      <div class="error">{{ form.isbn.errors }}</div>
+      {% endif %}
     </div>
-
 
     <!-- Campo ano de publicação -->
     <div class="form-group">
-      <label>Ano de publicação:</label>
+      <label for="{{ form.ano_publicacao.id_for_label }}">Ano de publicação:</label>
       {{ form.ano_publicacao }}
+      {% if form.ano_publicacao.errors %}
+      <div class="error">{{ form.ano_publicacao.errors }}</div>
+      {% endif %}
     </div>
 
     <!-- Campo autores (select múltiplo) -->
     <div class="form-group">
-      <label>Autores:</label>
+      <label for="{{ form.autores.id_for_label }}">Autores:</label>
       {{ form.autores }}
+      {% if form.autores.errors %}
+      <div class="error">{{ form.autores.errors }}</div>
+      {% endif %}
     </div>
 
     <!-- Campo quantidade -->
      <div class="form-group"> 
-        <label > Quantidade:</label>
+        <label for="{{ form.quantidade.id_for_label }}">Quantidade:</label>
         {{ form.quantidade }}
+        {% if form.quantidade.errors %}
+        <div class="error">{{ form.quantidade.errors }}</div>
+        {% endif %}
      </div>
 
     <!-- Campo categorias (select múltiplo, ocupa largura total) -->
     <div class="form-group full">
-      <label>Categorias:</label>
+      <label for="{{ form.categorias.id_for_label }}">Categorias:</label>
       {{ form.categorias }}
+      {% if form.categorias.errors %}
+      <div class="error">{{ form.categorias.errors }}</div>
+      {% endif %}
     </div>
 
     <!-- Área do botão principal -->
@@ -100,9 +130,18 @@ BookStack{% endblock %} {% block extra_css %}
     <!-- Campos dinâmicos -->
     <p>Id: <span id="popup-id"></span></p>
     <p>Nome: <span id="popup-nome"></span></p>
+    <button onclick="fecharPopup()" class="btn-add" style="margin-top: 20px;">OK</button>
   </div>
 </div>
-{% endblock %} {% block scripts %}
+{% endblock %} 
+
+{% block scripts %}
+<!-- jQuery necessário para Select2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <!-- Script: Funções do popup -->
 <script>
   function abrirPopup(id, nome) {
@@ -114,21 +153,26 @@ BookStack{% endblock %} {% block extra_css %}
   function fecharPopup() {
     document.getElementById("popup").classList.add("hidden");
   }
+  
+  // Fechar popup ao clicar fora
+  document.getElementById('popup').addEventListener('click', function(e) {
+    if (e.target === this) {
+      fecharPopup();
+    }
+  });
 </script>
-
-<!-- jQuery necessário para Select2 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Select2 -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- Ativação dos selects múltiplos -->
 <script>
   $(document).ready(function () {
-    $(".multi-select").select2({
+    // Aplica Select2 aos campos de autores e categorias
+    $('#id_autores, #id_categorias').select2({
       placeholder: "Selecione...",
       width: "100%",
     });
+    
+    // Adiciona classe para estilização
+    $('#id_autores, #id_categorias').addClass('multi-select');
   });
 </script>
 
@@ -137,4 +181,5 @@ BookStack{% endblock %} {% block extra_css %}
 <script>
   abrirPopup("{{ livro_id }}", "{{ livro_nome }}");
 </script>
-{% endif %} {% endblock %}
+{% endif %} 
+{% endblock %}

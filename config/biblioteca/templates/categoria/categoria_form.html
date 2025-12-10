@@ -1,84 +1,117 @@
-<!-- biblioteca/templates/categoria/categoria_form.html-->
-{% extends 'base.html' %}
-{% load static %}
+<!-- biblioteca/templates/categoria/categoria_form.html -->
+{% extends 'base.html' %} {% load static %}
 
-    <!-- Título exibido na aba do navegador -->
-{% block title %}Adicionar Categoria{% endblock %}
+<!-- Título exibido na aba do navegador -->
+{% block title %}Adicionar Categoria - BookStack{% endblock %}
 
-    <!-- CSS reutilizado da página de editora -->
+<!-- CSS da página -->
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/categoria_form.css' %}" />
-  </head>
-{% endblock %}
+<link rel="stylesheet" href="{% static 'css/categoria_form.css' %}" />
+{% endblock %} {% block content %}
 
-{% block content %}
-  <body>
-    <!-- Botão para voltar para a tela inicial -->
-    <a href="{% url 'home' %}" class="back-btn">←</a>
+<!-- Cabeçalho superior com logo e título -->
+<div class="top-header">
+  <img src="{% static 'img/logo.png' %}" class="logo" alt="Logo BookStack" />
+  <h1 class="titulo">Adicionar Categoria</h1>
+  <!-- Botão para voltar para a tela inicial -->
+  <a href="{% url 'home' %}" class="back-btn">←</a>
+</div>
 
-    <!-- Cabeçalho superior com logo e título -->
-    <div class="top-header">
-      <img src="/static/img/logo.png" class="logo" alt="Logo do sistema" />
-      <h1 class="titulo">Adicionar Categoria</h1>
+<!-- Container principal -->
+<div class="container">
+  <!-- Formulário para criar a categoria -->
+  <form action="{% url 'categoria-create' %}" method="POST">
+    {% csrf_token %}
+
+    <!-- Exibir erros não relacionados a campos específicos -->
+    {% if form.non_field_errors %}
+    <div class="error-message">
+      {% for error in form.non_field_errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
     </div>
+    {% endif %}
 
-    <!-- Container principal -->
-    <div class="container">
-      <!-- Formulário para criar a categoria -->
-      <form action="{% url 'categoria-create' %}" method="POST">
-        {% csrf_token %}
-
-        <!-- Área do campo único -->
-        <div class="form-group">
-          <!-- Campo de texto para nome da categoria -->
-          <div class="campo">
-            <label>Nome da Categoria:</label>
-            <input type="text" name="nome" required />
-          </div>
-        </div>
-
-        <!-- Botão principal -->
-        <div class="btn-area">
-          <button class="btn-add">Adicionar Categoria</button>
-        </div>
-      </form>
-    </div>
-{% endblock %}
-
-{% block scripts %}
-    <!-- POPUP de confirmação após salvar -->
-    <div id="popup" class="popup hidden">
-      <div class="popup-content">
-        <!-- Botão para fechar o popup -->
-        <button class="popup-close" onclick="fecharPopup()">X</button>
-
-        <h2>Categoria Salva <span class="check">✔️</span></h2>
-
-        <!-- Valores dinâmicos preenchidos no JavaScript -->
-        <p>Id: <span id="popup-id"></span></p>
-        <p>Nome da Categoria: <span id="popup-nome"></span></p>
+    <!-- Área do campo único -->
+    <div class="form-group">
+      <!-- Campo de texto para nome da categoria -->
+      <div class="campo">
+        <label>Nome da Categoria:</label>
+        <input type="text" name="nome" required />
       </div>
     </div>
 
-    <!-- Funções de exibição e fechamento do popup -->
-    <script>
-      function abrirPopup(id, nome) {
-        document.getElementById("popup-id").innerText = id;
-        document.getElementById("popup-nome").innerText = nome;
-        document.getElementById("popup").classList.remove("hidden");
-      }
+    <!-- Botão principal -->
+    <div class="btn-area">
+      <button type="submit" class="btn-add">Adicionar Categoria</button>
+    </div>
+  </form>
+</div>
 
-      function fecharPopup() {
-        document.getElementById("popup").classList.add("hidden");
-      }
-    </script>
+<!-- POPUP de confirmação após salvar -->
+<div id="popup" class="popup hidden">
+  <div class="popup-content">
+    <!-- Botão para fechar o popup -->
+    <button
+      class="popup-close"
+      onclick="fecharPopup()"
+      aria-label="Fechar popup"
+    >
+      ×
+    </button>
 
-    <!-- Exibe o popup apenas se a criação foi bem-sucedida -->
-    {% if sucesso %}
-    <script>
-      abrirPopup("{{ categoria_id }}", "{{ categoria_nome }}");
-    </script>
-    {% endif %}
-{% endblock %}
-  </body>
-</html>
+    <h2>Categoria Salva <span class="check">✔️</span></h2>
+
+    <!-- Valores dinâmicos preenchidos no JavaScript -->
+    <p>Id: <span id="popup-id"></span></p>
+    <p>Nome da Categoria: <span id="popup-nome"></span></p>
+
+    <!-- Botão OK adicional -->
+    <button onclick="fecharPopup()" class="btn-add" style="margin-top: 20px">
+      OK
+    </button>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<!-- Funções de exibição e fechamento do popup -->
+<script>
+  function abrirPopup(id, nome) {
+    document.getElementById("popup-id").textContent = id;
+    document.getElementById("popup-nome").textContent = nome;
+    document.getElementById("popup").classList.remove("hidden");
+
+    // Adicionar evento para fechar com ESC
+    document.addEventListener("keydown", fecharComEsc);
+
+    // Focar no botão de fechar para acessibilidade
+    setTimeout(() => {
+      document.querySelector(".popup-close").focus();
+    }, 100);
+  }
+
+  function fecharPopup() {
+    document.getElementById("popup").classList.add("hidden");
+    // Remover evento do ESC
+    document.removeEventListener("keydown", fecharComEsc);
+  }
+
+  function fecharComEsc(event) {
+    if (event.key === "Escape" || event.key === "Esc") {
+      fecharPopup();
+    }
+  }
+
+  // Fechar popup ao clicar fora do conteúdo
+  document.getElementById("popup").addEventListener("click", function (e) {
+    if (e.target === this) {
+      fecharPopup();
+    }
+  });
+</script>
+
+<!-- Exibe o popup apenas se a criação foi bem-sucedida -->
+{% if sucesso %}
+<script>
+  abrirPopup("{{ categoria_id }}", "{{ categoria_nome }}");
+</script>
+{% endif %} {% endblock %}

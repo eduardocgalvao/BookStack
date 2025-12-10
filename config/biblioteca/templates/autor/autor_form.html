@@ -1,85 +1,126 @@
-<!-- biblioteca/templates/autor/autor_form.html-->
-{% extends 'base.html' %}
-{% load static %}
+<!-- biblioteca/templates/autor/autor_form.html -->
+{% extends 'base.html' %} {% load static %}
 
 <!-- Título exibido na aba do navegador -->
-{% block title %}Adicionar Autor{% endblock %}
+{% block title %}Adicionar Autor - BookStack{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/autor_form.css' %}" />
+{% endblock %} {% block content %}
+<!-- Botão para voltar à página inicial -->
+<a href="{% url 'home' %}" class="back-btn">←</a>
 
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/autor_form.css' %}" />
-</head>
-{% endblock %}
+<div class="pagina">
+  <div class="cabecalho-livro">
+    <img
+      src="{% static 'img/logo.png' %}"
+      class="logo-site"
+      alt="Logo BookStack"
+    />
+    <h1>Adicione um Novo Autor</h1>
+  </div>
 
-{% block content %}
-<body>
-    <a href="{% url 'home' %}" class="back-btn">←</a>
+  <div class="card-form">
+    <form method="POST" action="{% url 'autor-create' %}">
+      {% csrf_token %}
 
-    <div class="pagina">
-        <div class="cabecalho-livro">
-            <img src="{% static 'img/logo.png' %}" class="logo-site">
-            <h1>Adicione um Novo Autor</h1>
+      <!-- Exibir erros não relacionados a campos específicos -->
+      {% if form.non_field_errors %}
+      <div class="error-message">
+        {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="linha-inputs">
+        <div class="campo">
+          <label for="id_nome">Nome:</label>
+          <input
+            type="text"
+            name="nome"
+            id="id_nome"
+            value="{{ form.nome.value|default_if_none:'' }}"
+          />
+          {{ form.nome.errors }}
         </div>
 
-        <div class="card-form">
-            <form method="POST" action="{% url 'autor-create' %}">
-                {% csrf_token %}
-
-                <div class="linha-inputs">
-                    <div class="campo">
-                        <label for="id_nome">Nome:</label>
-                        <input type="text" name="nome" id="id_nome" value="{{ form.nome.value|default_if_none:'' }}">
-                        {{ form.nome.errors }}
-                    </div>
-
-                    <div class="campo">
-                        <label for="id_sobrenome">Sobrenome:</label>
-                        <input type="text" name="sobrenome" id="id_sobrenome" value="{{ form.sobrenome.value|default_if_none:'' }}">
-                        {{ form.sobrenome.errors }}
-                    </div>
-                </div>
-
-                <div class="btn-area">
-                    <button type="submit" class="btn-salvar">
-                        Adicionar Autor
-                    </button>
-                </div>
-            </form>
+        <div class="campo">
+          <label for="id_sobrenome">Sobrenome:</label>
+          <input
+            type="text"
+            name="sobrenome"
+            id="id_sobrenome"
+            value="{{ form.sobrenome.value|default_if_none:'' }}"
+          />
+          {{ form.sobrenome.errors }}
         </div>
-    </div>
-{% endblock %}
+      </div>
 
-{% block scripts %}
-    <!-- POP-UP DE SUCESSO -->
-    {% if sucesso %}
-    <div id="popup" class="popup mostrar">
-        <div class="popup-content">
-            <button class="popup-close" onclick="fecharPopup()">X</button>
-            <h2>Autor Salvo <span class="check">✔️</span></h2>
-            <p>Id: <span id="popup-id">{{ autor_id }}</span></p>
-            <p>Nome: <span id="popup-nome">{{ autor_nome }}</span></p>
-            <p>Sobrenome: <span id="popup-sobrenome">{{ autor_sobrenome }}</span></p>
-        </div>
-    </div>
-    <script>
-        function fecharPopup() {
-            document.getElementById("popup").classList.remove("mostrar");
-        }
-        
-        // Fechar ao clicar fora do conteúdo
-        document.getElementById("popup").addEventListener('click', function(e) {
-            if (e.target.id === 'popup') {
-                fecharPopup();
-            }
-        });
-        
-        // Fechar com ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                fecharPopup();
-            }
-        });
-    </script>
-    {% endif %}
+      <div class="btn-area">
+        <button type="submit" class="btn-salvar">Adicionar Autor</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- POPUP de sucesso (sempre no DOM, oculto por padrão) -->
+<div id="popup" class="popup">
+  <div class="popup-content">
+    <button
+      class="popup-close"
+      onclick="fecharPopup()"
+      aria-label="Fechar popup"
+    >
+      ×
+    </button>
+    <h2>Autor Salvo <span class="check">✔️</span></h2>
+    <p>Id: <span id="popup-id"></span></p>
+    <p>Nome: <span id="popup-nome"></span></p>
+    <p>Sobrenome: <span id="popup-sobrenome"></span></p>
+    <button onclick="fecharPopup()" class="btn-salvar" style="margin-top: 20px">
+      OK
+    </button>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  // Funções para controlar o popup
+  function abrirPopup(id, nome, sobrenome) {
+      document.getElementById("popup-id").textContent = id;
+      document.getElementById("popup-nome").textContent = nome;
+      document.getElementById("popup-sobrenome").textContent = sobrenome;
+      document.getElementById("popup").classList.add("mostrar");
+
+      // Adicionar evento para fechar com ESC
+      document.addEventListener('keydown', fecharComEsc);
+
+      // Focar no botão de fechar para acessibilidade
+      setTimeout(() => {
+          document.querySelector('.popup-close').focus();
+      }, 100);
+  }
+
+  function fecharPopup() {
+      document.getElementById("popup").classList.remove("mostrar");
+      // Remover evento do ESC
+      document.removeEventListener('keydown', fecharComEsc);
+  }
+
+  function fecharComEsc(event) {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+          fecharPopup();
+      }
+  }
+
+  // Fechar popup ao clicar fora do conteúdo
+  document.getElementById('popup').addEventListener('click', function(e) {
+      if (e.target === this) {
+          fecharPopup();
+      }
+  });
+
+  // Abrir popup se o formulário foi enviado com sucesso
+  {% if sucesso %}
+  abrirPopup("{{ autor_id }}", "{{ autor_nome }}", "{{ autor_sobrenome }}");
+  {% endif %}
+</script>
 {% endblock %}
-</body>
-</html>

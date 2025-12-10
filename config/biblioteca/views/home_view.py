@@ -37,13 +37,8 @@ def listar_livros(request):
     # Calcular disponibilidade para cada livro
     livros_com_disponibilidade = []
     for livro in page_obj:
-        # AJUSTE ESTE FILTRO conforme seu model Emprestimo
         emprestados_ativos = Emprestimo.objects.filter(
             livro=livro,
-            # Se seu model tem campo 'devolvido' (True/False)
-            # devolvido=False
-            # OU se tem campo 'status' com valores específicos
-            # status='emprestado'
         ).count()
         
         # Calcular disponível

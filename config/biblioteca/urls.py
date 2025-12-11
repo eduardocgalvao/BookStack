@@ -1,5 +1,6 @@
 # biblioteca/urls.py
 from django.urls import path
+from .views import logout_view
 
 from .views.livro_views import (
     livro_list,
@@ -51,9 +52,10 @@ from .views.home_view import livro_dados_json  # Adicione esta linha
 from .views.home_view import listar_livros  # Adicione esta linha se necessário
 
 urlpatterns = [
-    # LOGIN
+    # LOGIN/LOGOUT
     path("", login_view, name="login"),
     path("registro/", registro_view, name="registro"),
+    path("logout/", logout_view, name="logout"),
 
     # TELA INICIAL (HOME)
     path('home/', listar_livros, name='home'),  # Use listar_livros

@@ -7,7 +7,7 @@ from .emprestimo_views import (
 )
 
 
-from .auth_views import (login_view, home, registro_view)
+from .auth_views import login_view, home, registro_view, logout_view
 
 from .livro_views import (
     LivroCreateView, livro_list, RemoverLivroView,

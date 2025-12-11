@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from biblioteca.models import tbl_usuario
 from django.conf import settings
+from django.contrib.auth import logout
 
 def login_view(request):
     if request.method == 'POST':
@@ -31,6 +32,10 @@ def home(request):
         'usuario_nome': usuario_nome
     })
     
+def logout_view(request):
+    logout(request)        # limpa a sessão do usuário
+    return redirect("/")   # volta para o login
+
 def registro_view(request):
     if request.method == "POST":
         nome = request.POST.get("nome")

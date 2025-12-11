@@ -67,15 +67,51 @@ def livro_list(request):
             dt_devolucao_real__isnull=True,
         ).count()
         
-        # Calcular disponível
-        disponivel = (livro.quantidade or 0) - emprestados_ativos
+        # Calcular disponível (usando o máximo entre 0 e a diferença)
+        # EVITAR VALORES NEGATIVOS
+        disponivel_calculado = max(0, (livro.quantidade or 0) - emprestados_ativos)
+        
+        # Se o campo disponivel do model não está sendo atualizado, use o calculado
+        # Ou atualize o campo no model:
+        if livro.disponivel != disponivel_calculado:
+            livro.disponivel = disponivel_calculado
+            livro.save(update_fields=['disponivel'])
         
         livros_com_relacionados.append({
             'livro': livro,
             'autores': list(livro.autores.all()),
             'categorias': list(livro.categorias.all()),
-            'disponivel': livro.disponivel  # Não permite negativo
+            'disponivel_calculado': disponivel_calculado,  # Para debug
+            'emprestados_ativos': emprestados_ativos,  # Para debug
+            'isbn': livro.isbn if hasattr(livro, 'isbn') else "Não informado",
+            'quantidade': livro.quantidade if hasattr(livro, 'quantidade') else 0,
+            'disponivel': livro.disponivel if hasattr(livro, 'disponivel') else 0,
         })
+    
+    # DEBUG: Verifique os dados
+    for item in livros_com_relacionados[:3]:  # Primeiros 3
+        print(f"DEBUG Livro: {item['livro'].titulo}")
+        print(f"  ISBN: {item['isbn']}")
+        print(f"  Quantidade: {item['quantidade']}")
+        print(f"  Disponível (campo): {item['disponivel']}")
+        print(f"  Disponível (calculado): {item['disponivel_calculado']}")
+        print(f"  Emprestados ativos: {item['emprestados_ativos']}")
+    
+    # Outros dados para o template
+    editoras = tbl_editora.objects.all()
+    categorias = tbl_categoria.objects.all()
+    autores = tbl_autor.objects.all()
+    status_list = tbl_status_livro.objects.filter(ativo=True)
+    
+    return render(request, 'livro/livro_list.html', {
+        'livros_com_relacionados': livros_com_relacionados,
+        'editoras': editoras,
+        'categorias': categorias,
+        'autores': autores,
+        'status_list': status_list,
+        'hoje': timezone.now().date(),
+        'data_padrao': timezone.now().date() + timedelta(days=10)
+    })
     
     # Outros dados para o template
     editoras = tbl_editora.objects.all()
@@ -120,11 +156,26 @@ def api_livro_detail(request, livro_id):
         categorias_nomes = ', '.join([cat.nome for cat in categorias]) if categorias else ''
         print(f"Categorias encontradas: {[c.nome for c in categorias]}")
         
+        # Contar empréstimos ativos para cálculo correto
+        emprestados_ativos = Emprestimo.objects.filter(
+            livro=livro,
+            dt_devolucao_real__isnull=True,
+        ).count()
+        
+        # Calcular disponível corretamente
+        quantidade = livro.quantidade if hasattr(livro, 'quantidade') else 0
+        disponivel_calculado = max(0, quantidade - emprestados_ativos)
+        
         # Processa categoria_id
         categoria_id = None
         if categorias:
             categoria_id = categorias[0].id_categoria
             print(f"Categoria ID selecionada: {categoria_id}")
+            
+        # Atualizar campo disponivel no banco se necessário
+        if hasattr(livro, 'disponivel') and livro.disponivel != disponivel_calculado:
+            livro.disponivel = disponivel_calculado
+            livro.save(update_fields=['disponivel'])
         
         # Processa status
         status_id = None
@@ -147,7 +198,11 @@ def api_livro_detail(request, livro_id):
             'categorias': categorias_nomes,
             'categorias_ids': categorias_ids,
             'status': livro.status.descricao if livro.status else '',
-            'status_id': livro.status.id_status if livro.status else None
+            'status_id': livro.status.id_status if livro.status else None,
+            'isbn': livro.isbn if hasattr(livro, 'isbn') else "Não informado",
+            'quantidade': quantidade,
+            'disponivel': livro.disponivel if hasattr(livro, 'disponivel') else disponivel_calculado,
+            'emprestados_ativos': emprestados_ativos,
         }
         
         # Adicionar datas com verificação segura

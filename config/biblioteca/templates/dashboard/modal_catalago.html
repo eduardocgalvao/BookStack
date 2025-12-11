@@ -18,10 +18,12 @@
         <div class="modal-body">
             <div class="book-detail-grid">
                 <div class="book-detail-cover">
-                    <img id="modalBookCover" src="" alt="Capa do livro" loading="lazy">
+                    <img id="modalBookCover" src="" alt="Capa do livro" loading="lazy" 
+                         onerror="this.onerror=null; this.src='{% static 'images/default-cover.png' %}';">
                 </div>
                 
                 <div class="book-detail-info">
+                    <!-- Informações principais -->
                     <div class="detail-row">
                         <span class="detail-label">📚 Título:</span>
                         <span class="detail-value" id="modalBookTitleText"></span>
@@ -42,38 +44,60 @@
                         <span class="detail-value" id="modalBookCategories"></span>
                     </div>
                     
+                    <!-- Estoque e disponibilidade -->
                     <div class="detail-row">
                         <span class="detail-label">🔢 ISBN:</span>
                         <span class="detail-value" id="modalBookISBN"></span>
                     </div>
                     
                     <div class="detail-row">
-                        <span class="detail-label">📅 Ano:</span>
+                        <span class="detail-label">📅 Ano de Publicação:</span>
                         <span class="detail-value" id="modalBookYear"></span>
                     </div>
                     
                     <div class="detail-row">
-                        <span class="detail-label">📦 Quantidade:</span>
-                        <span class="detail-value" id="modalBookQuantity"></span>
+                        <span class="detail-label">📦 Estoque Total:</span>
+                        <span class="detail-value" id="modalBookQuantity">
+                            <span id="modalBookQuantityValue">0</span>
+                            <span class="quantity-indicator" id="modalBookQuantityIndicator"></span>
+                        </span>
                     </div>
                     
                     <div class="detail-row">
-                        <span class="detail-label">📊 Disponível:</span>
-                        <span class="detail-value" id="modalBookAvailable"></span>
+                        <span class="detail-label">📊 Disponível para Empréstimo:</span>
+                        <span class="detail-value" id="modalBookAvailable">
+                            <span id="modalBookAvailableValue">0</span>
+                            <span class="availability-indicator" id="modalBookAvailabilityIndicator"></span>
+                        </span>
                     </div>
                     
+                    <div class="detail-row">
+                        <span class="detail-label">📈 Empréstimos Ativos:</span>
+                        <span class="detail-value" id="modalBookLoaned"></span>
+                    </div>
+                    
+                    <!-- Status dinâmico -->
                     <div class="detail-row">
                         <span class="detail-label">📈 Status:</span>
-                        <span class="detail-value" id="modalBookStatus"></span>
+                        <span class="detail-value">
+                            <span class="status-badge" id="modalBookStatus"></span>
+                        </span>
                     </div>
                     
+                    <!-- Datas -->
                     <div class="detail-row">
                         <span class="detail-label">📅 Cadastrado em:</span>
                         <span class="detail-value" id="modalBookCreated"></span>
                     </div>
                     
                     <div class="detail-row">
-                        <span class="detail-label">📝 Descrição:</span>
+                        <span class="detail-label">🔄 Última Atualização:</span>
+                        <span class="detail-value" id="modalBookUpdated"></span>
+                    </div>
+                    
+                    <!-- Descrição -->
+                    <div class="detail-row full-width">
+                        <span class="detail-label">📝 Sinopse/Descrição:</span>
                         <div class="detail-value book-description" id="modalBookDescription"></div>
                     </div>
                 </div>
@@ -81,9 +105,20 @@
             
             <div class="modal-actions">
                 {% if user.is_authenticated %}
-                <button id="btnEmprestar" class="btn btn-primary" onclick="goToLoan()">
+                <button id="btnEmprestar" class="btn btn-primary" onclick="emprestarLivro()">
                     📥 Emprestar Livro
                 </button>
+                
+                {% if user.is_staff %}
+                <button id="btnEditar" class="btn btn-warning" onclick="editarLivroModal()">
+                    ✏️ Editar Livro
+                </button>
+                
+                <button id="btnExcluir" class="btn btn-danger" onclick="excluirLivroModal()">
+                    🗑️ Excluir Livro
+                </button>
+                {% endif %}
+                
                 {% else %}
                 <a href="{% url 'login' %}?next={% url 'livro_list' %}" class="btn btn-primary">
                     🔑 Fazer Login para Emprestar
@@ -97,3 +132,286 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de confirmação de empréstimo -->
+<div id="confirmLoanModal" class="confirm-modal" style="display: none;">
+    <div class="confirm-content">
+        <h3>📥 Confirmar Empréstimo</h3>
+        <p id="confirmLoanMessage">Deseja emprestar o livro <strong id="confirmLoanTitle"></strong>?</p>
+        <div class="confirm-actions">
+            <button class="btn btn-success" onclick="confirmarEmprestimo()">Confirmar</button>
+            <button class="btn btn-secondary" onclick="fecharConfirmLoanModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Variáveis globais
+let livroAtualId = null;
+let livroAtualTitulo = '';
+let livroAtualDisponivel = 0;
+
+// Função para abrir modal de detalhes (atualizada)
+function openBookModal(livroId) {
+    livroAtualId = livroId;
+    
+    fetch(`/api/livros/${livroId}/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na requisição: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                mostrarErroModal('Erro ao carregar dados do livro: ' + data.error);
+                return;
+            }
+            
+            console.log('Dados recebidos do livro:', data);
+            
+            // Preencher campos do modal com dados REAIS do banco
+            preencherCamposModal(data);
+            
+            // Atualizar variáveis globais
+            livroAtualTitulo = data.titulo;
+            livroAtualDisponivel = data.disponivel || 0;
+            
+            // Configurar botões de ação
+            configurarBotoesAcao(data);
+            
+            // Mostrar modal
+            document.getElementById('bookModal').style.display = 'flex';
+        })
+        .catch(error => {
+            console.error('Erro ao carregar livro:', error);
+            mostrarErroModal('Erro ao carregar dados do livro. Tente novamente.');
+        });
+}
+
+// Função para preencher campos do modal com dados reais
+function preencherCamposModal(data) {
+    // Informações principais
+    document.getElementById('modalBookMainTitle').textContent = data.titulo || 'Título não informado';
+    document.getElementById('modalBookTitleText').textContent = data.titulo || 'Título não informado';
+    document.getElementById('modalBookAuthors').textContent = data.autores || 'Autor não informado';
+    document.getElementById('modalBookPublisher').textContent = data.editora || 'Editora não informada';
+    document.getElementById('modalBookCategories').textContent = data.categorias || 'Categoria não informada';
+    
+    // Estoque e disponibilidade (VALORES REAIS DO BANCO)
+    document.getElementById('modalBookISBN').textContent = data.isbn || 'ISBN não informado';
+    document.getElementById('modalBookYear').textContent = data.ano_publicacao || 'Ano não informado';
+    
+    // Quantidade em estoque (valor REAL)
+    const quantidade = data.quantidade || 0;
+    document.getElementById('modalBookQuantityValue').textContent = quantidade;
+    
+    // Disponível para empréstimo (valor REAL calculado)
+    const disponivel = data.disponivel || 0;
+    document.getElementById('modalBookAvailableValue').textContent = disponivel;
+    
+    // Empréstimos ativos (calculado: quantidade - disponível)
+    const emprestados = Math.max(0, quantidade - disponivel);
+    document.getElementById('modalBookLoaned').textContent = emprestados;
+    
+    // Status do livro (REAL do banco)
+    const status = data.status || 'Não informado';
+    const statusElement = document.getElementById('modalBookStatus');
+    statusElement.textContent = status;
+    statusElement.className = 'status-badge ' + getStatusClass(status);
+    
+    // Datas
+    document.getElementById('modalBookCreated').textContent = data.dt_criacao || 'Data não informada';
+    document.getElementById('modalBookUpdated').textContent = data.dt_atualizacao || 'Data não informada';
+    
+    // Descrição
+    document.getElementById('modalBookDescription').textContent = 
+        data.descricao || 'Descrição não disponível para este livro.';
+    
+    // Capa do livro
+    const imgElement = document.getElementById('modalBookCover');
+    if (data.capa_url) {
+        imgElement.src = data.capa_url;
+        imgElement.alt = `Capa de ${data.titulo}`;
+    } else {
+        imgElement.src = "{% static 'images/default-cover.png' %}";
+        imgElement.alt = "Capa padrão";
+    }
+    
+    // Atualizar indicadores visuais
+    atualizarIndicadores(quantidade, disponivel);
+}
+
+// Função para atualizar indicadores visuais de estoque
+function atualizarIndicadores(quantidade, disponivel) {
+    const quantidadeIndicator = document.getElementById('modalBookQuantityIndicator');
+    const disponivelIndicator = document.getElementById('modalBookAvailabilityIndicator');
+    
+    // Indicador de quantidade total
+    if (quantidade <= 0) {
+        quantidadeIndicator.textContent = ' (ESGOTADO)';
+        quantidadeIndicator.className = 'quantity-indicator esgotado';
+    } else if (quantidade <= 3) {
+        quantidadeIndicator.textContent = ' (BAIXO ESTOQUE)';
+        quantidadeIndicator.className = 'quantity-indicator baixo';
+    } else if (quantidade <= 10) {
+        quantidadeIndicator.textContent = ' (ESTOQUE MÉDIO)';
+        quantidadeIndicator.className = 'quantity-indicator medio';
+    } else {
+        quantidadeIndicator.textContent = ' (ESTOQUE SUFICIENTE)';
+        quantidadeIndicator.className = 'quantity-indicator suficiente';
+    }
+    
+    // Indicador de disponibilidade
+    if (disponivel <= 0) {
+        disponivelIndicator.textContent = ' (INDISPONÍVEL)';
+        disponivelIndicator.className = 'availability-indicator indisponivel';
+    } else if (disponivel <= 3) {
+        disponivelIndicator.textContent = ' (POUCAS UNIDADES)';
+        disponivelIndicator.className = 'availability-indicator poucas';
+    } else {
+        disponivelIndicator.textContent = ' (DISPONÍVEL)';
+        disponivelIndicator.className = 'availability-indicator disponivel';
+    }
+}
+
+// Função para obter classe CSS baseada no status
+function getStatusClass(status) {
+    const statusLower = status.toLowerCase();
+    if (statusLower.includes('disponível')) return 'status-disponivel';
+    if (statusLower.includes('indisponível') || statusLower.includes('esgotado')) return 'status-indisponivel';
+    if (statusLower.includes('emprestado')) return 'status-emprestado';
+    if (statusLower.includes('reservado')) return 'status-reservado';
+    if (statusLower.includes('manutenção')) return 'status-manutencao';
+    return 'status-default';
+}
+
+// Função para configurar botões de ação
+function configurarBotoesAcao(data) {
+    const btnEmprestar = document.getElementById('btnEmprestar');
+    const btnEditar = document.getElementById('btnEditar');
+    const btnExcluir = document.getElementById('btnExcluir');
+    
+    // Configurar botão de empréstimo
+    const disponivel = data.disponivel || 0;
+    if (disponivel > 0) {
+        btnEmprestar.disabled = false;
+        btnEmprestar.innerHTML = '📥 Emprestar Livro';
+        btnEmprestar.className = 'btn btn-success';
+        btnEmprestar.onclick = function() { iniciarEmprestimo(data.id, data.titulo, disponivel); };
+    } else {
+        btnEmprestar.disabled = true;
+        btnEmprestar.innerHTML = '📦 Indisponível no momento';
+        btnEmprestar.className = 'btn btn-secondary';
+        btnEmprestar.onclick = null;
+    }
+    
+    // Configurar botões de edição/exclusão (apenas para staff)
+    if (btnEditar) {
+        btnEditar.onclick = function() { editarLivroModal(data.id); };
+    }
+    
+    if (btnExcluir) {
+        btnExcluir.onclick = function() { excluirLivroModal(data.id, data.titulo); };
+    }
+}
+
+// Função para iniciar processo de empréstimo
+function iniciarEmprestimo(livroId, titulo, disponivel) {
+    document.getElementById('confirmLoanTitle').textContent = titulo;
+    document.getElementById('confirmLoanMessage').innerHTML = `
+        Deseja emprestar o livro <strong>"${titulo}"</strong>?<br>
+        <small>Unidades disponíveis: ${disponivel}</small>
+    `;
+    document.getElementById('confirmLoanModal').style.display = 'flex';
+}
+
+// Função para confirmar empréstimo
+function confirmarEmprestimo() {
+    if (!livroAtualId) return;
+    
+    // Redirecionar para página de empréstimo
+    window.location.href = `/emprestimos/novo/?livro=${livroAtualId}`;
+}
+
+// Função para fechar modal de confirmação de empréstimo
+function fecharConfirmLoanModal() {
+    document.getElementById('confirmLoanModal').style.display = 'none';
+}
+
+// Função para editar livro
+function editarLivroModal(livroId) {
+    if (!livroId) livroId = livroAtualId;
+    window.location.href = `/livros/${livroId}/editar/`;
+}
+
+// Função para excluir livro
+function excluirLivroModal(livroId, titulo) {
+    if (!livroId) livroId = livroAtualId;
+    if (!titulo) titulo = livroAtualTitulo;
+    
+    if (confirm(`Tem certeza que deseja excluir o livro "${titulo}"?\n\nEsta ação não pode ser desfeita.`)) {
+        fetch(`/api/livros/${livroId}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                closeModal();
+                location.reload();
+            } else {
+                alert('Erro: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao excluir livro');
+        });
+    }
+}
+
+// Função para mostrar erro no modal
+function mostrarErroModal(mensagem) {
+    document.getElementById('modalBookMainTitle').textContent = 'Erro';
+    document.getElementById('modalBookTitleText').textContent = mensagem;
+    document.getElementById('bookModal').style.display = 'flex';
+}
+
+// Função para fechar modal
+function closeModal(event) {
+    if (!event || event.target.classList.contains('modal-overlay') || 
+        event.target.classList.contains('modal-close') ||
+        (event.target.textContent && event.target.textContent.includes('Fechar'))) {
+        document.getElementById('bookModal').style.display = 'none';
+        document.getElementById('confirmLoanModal').style.display = 'none';
+    }
+}
+
+// Helper para pegar cookie CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Fechar modal com ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+</script>

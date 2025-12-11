@@ -15,12 +15,13 @@
   <body>
 
     <!-- Botão para retornar à tela inicial -->
-    <a href="{% url 'home' %}" class="back-btn">←</a>
+    
 
     <!-- Cabeçalho superior com logo e título -->
     <div class="top-header">
       <img src="/static/img/logo.png" class="logo" alt="Logo" />
       <h1 class="titulo">Adicionar Editora</h1>
+      <a href="{% url 'editora-list' %}" class="back-btn">←</a>
     </div>
 
     <!-- Container principal do formulário -->

@@ -2,42 +2,45 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Categorias cadastradas{% endblock %}
+{% block title %}Editoras cadastradas{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/categoria_list_simples.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/editora_list_simples.css' %}" />
 {% endblock %}
 
 {% block content %}
 <body>
-    <div class="categorias-container">
+    <div class="editoras-container">
         <header class="top-bar">
-             <a href="{% url 'home' %}" class="back-btn">←</a>
-            <h1>Categorias cadastradas</h1>
+            <a href="{% url 'home' %}" class="back-btn">←</a>
+            <h1>Editoras cadastradas</h1>
         </header>
-        
 
-        <button type="button" class="btn-create" data-action="create" title="Cadastrar">Cadastrar Categoria</button>
+        <button type="button" class="btn-create" data-action="create" title="Cadastrar">Cadastrar Editora</button>
 
         <main class="card-tabela">
-            <table class="tabela-categorias">
+            <table class="tabela-editoras">
                 <thead>
                     <tr>
                         <th class="acoes-col"></th>
                         <th>Nome</th>
+                        <th>Endereço</th>
+                        <th>Cidade</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for categoria in categorias %}
-                    <tr data-id="{{ categoria.id_categoria }}" data-nome="{{ categoria.nome }}">
+                    {% for editora in editoras %}
+                    <tr data-id="{{ editora.id_editora }}" data-nome="{{ editora.nome }}" data-endereco="{{ editora.endereco }}" data-cidade="{{ editora.cidade }}">
                         <td class="acoes-cell">
                             <button type="button" class="btn btn-edit" data-action="edit" title="Editar">✏️</button>
                         </td>
-                        <td data-label="Nome">{{ categoria.nome }}</td>
+                        <td data-label="Nome">{{ editora.nome }}</td>
+                        <td data-label="Endereço">{{ editora.endereco }}</td>
+                        <td data-label="Cidade">{{ editora.cidade }}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="2" class="empty-message">Nenhuma categoria cadastrada.</td>
+                        <td colspan="4" class="empty-message">Nenhuma editora cadastrada.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -49,16 +52,26 @@
     <div id="edit-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-modal">×</span>
-            <h3>Editar Categoria</h3>
+            <h3>Editar Editora</h3>
 
             <form id="edit-form" method="post" action="">
                 {% csrf_token %}
-                <input type="hidden" id="edit-id" name="categoria_id" />
+                <input type="hidden" id="edit-id" name="editora_id" />
 
                 <div class="form-grid">
                     <div class="campo">
                         <label for="edit-nome">Nome *</label>
                         <input type="text" id="edit-nome" name="nome" />
+                    </div>
+
+                    <div class="campo">
+                        <label for="edit-endereco">Endereço</label>
+                        <input type="text" id="edit-endereco" name="endereco" />
+                    </div>
+
+                    <div class="campo">
+                        <label for="edit-cidade">Cidade</label>
+                        <input type="text" id="edit-cidade" name="cidade" />
                     </div>
                 </div>
 
@@ -69,6 +82,7 @@
             </form>
         </div>
     </div>
+
 </body>
 {% endblock %}
 
@@ -86,25 +100,29 @@ document.addEventListener('DOMContentLoaded', function(){
     // Botão de criação (fora da grade) redireciona para a view de criação
     const createBtn = document.querySelector('.btn-create');
     if(createBtn){
-        createBtn.addEventListener('click', function(){ window.location.href = '{% url "categoria-create" %}'; });
+        createBtn.addEventListener('click', function(){ window.location.href = '{% url "editora-create" %}'; });
     }
 
-    document.querySelector('.tabela-categorias').addEventListener('click', function(e){
+    document.querySelector('.tabela-editoras').addEventListener('click', function(e){
         const btn = e.target.closest('button');
         if(!btn) return;
         const tr = btn.closest('tr');
         const id = tr && tr.dataset.id;
         const nome = tr && tr.dataset.nome;
+        const endereco = tr && tr.dataset.endereco;
+        const cidade = tr && tr.dataset.cidade;
         const action = btn.dataset.action;
 
         if(action === 'edit'){
-            editForm.action = `/categorias/${id}/editar/`;
+            editForm.action = `/editoras/${id}/editar/`;
             document.getElementById('edit-nome').value = nome || '';
+            document.getElementById('edit-endereco').value = endereco || '';
+            document.getElementById('edit-cidade').value = cidade || '';
             openModal(editModal);
         }
 
         if(action === 'delete'){
-            deleteForm.action = `/categorias/${id}/deletar/`;
+            deleteForm.action = `/editoras/${id}/deletar/`;
             document.getElementById('delete-msg').textContent = `Tem certeza que deseja excluir "${nome}"?`;
             openModal(deleteModal);
         }

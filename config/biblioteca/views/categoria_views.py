@@ -22,6 +22,7 @@ class CategoriaCreateView(View):
         form = CategoriaForm(request.POST)
         if form.is_valid():
             categoria = form.save()
+            return redirect("categoria-list")
 
         return render(request, 'categoria/categoria_list.html', {"form": form, "categoria": categoria})
     

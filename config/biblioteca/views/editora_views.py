@@ -7,7 +7,7 @@ from ..models import tbl_editora
 # LISTAR EDITORAS --------------------------------------------------------
 
 class EditoraListView(View):
-    template_name = "editora/editora_form.html"
+    template_name = "editora/editora_list.html"
 
     def get(self, request):
         editoras = tbl_editora.objects.all()
@@ -28,17 +28,12 @@ class EditoraCreateView(View):
         if form.is_valid():
             editora = form.save()
             
-            return render(request, self.template_name, {
-                "form": form, 
-                "sucesso": True, 
-                "editora_id": editora.id_editora, 
-                "editora_nome": editora.nome
-            })
+            return render(request, self.template_name,{"form": form, "editora": editora})
 
 # EDITAR EDITORA ---------------------------------------------------------
 
 class EditoraUpdateView(View):
-    template_name = "editora/editora_form.html"
+    template_name = "editora/editora_list.html"
 
     def get(self, request, pk):
         editora = get_object_or_404(tbl_editora, pk=pk)

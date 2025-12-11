@@ -84,9 +84,10 @@ body{
 .tabela-autores thead th{
     text-align: left;
     font-size: 13px;
-    color: var(--muted);
+    color: #e6e9ef;
     padding: 10px 12px;
     border-bottom: 1px solid var(--border);
+    background-color: #019c99;
    
 }
 
@@ -121,6 +122,17 @@ body{
     border-radius: 6px;
     font-size: 14px;
 }
+
+.back-btn {
+    position: absolute;
+    top: 25px;
+    left: 290px;
+    font-size: 26px;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
 
 .btn-create{
     padding: 12px 18px;

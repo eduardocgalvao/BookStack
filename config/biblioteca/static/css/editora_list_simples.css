@@ -1,4 +1,4 @@
-/* Estilos para a listagem simples de categorias */
+/* Estilos para a listagem simples de editoras */
 
 :root{
     --bg: #f5f5f5;
@@ -14,8 +14,8 @@ body{
     color: #111827;
 }
 
-.categorias-container{
-    width: 100% ;
+.editoras-container{
+    width: 100%;
     padding: 20px 40px;
     background: var(--bg);
     min-height: 100vh;
@@ -51,30 +51,30 @@ body{
     text-align: center;
 }
 
-/* ========== TABELA DE CATEGORIAS ========== */
+/* ========== TABELA DE EDITORAS ========== */
 .card-tabela {
     background: white;
     margin: 0 auto;
     padding: 25px;
     border-radius: 12px;
-    width: 60%;
+    width: 100%;
     box-shadow: 0 5px 25px rgba(0,0,0,0.08);
     overflow-x: auto;
 }
 
-.tabela-categorias {
+.tabela-editoras {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
 }
 
 /* Cabeçalho da tabela */
-.tabela-categorias thead tr {
+.tabela-editoras thead tr {
     background: var(--accent);
     color: white;
 }
 
-.tabela-categorias thead th {
+.tabela-editoras thead th {
     padding: 15px 12px;
     text-align: left;
     font-weight: 600;
@@ -83,16 +83,16 @@ body{
 }
 
 /* Linhas da tabela */
-.tabela-categorias tbody tr {
+.tabela-editoras tbody tr {
     transition: background-color 0.2s ease;
     border-bottom: 1px solid #eaeaea;
 }
 
-.tabela-categorias tbody tr:hover {
+.tabela-editoras tbody tr:hover {
     background-color: #f9f9f9;
 }
 
-.tabela-categorias tbody td {
+.tabela-editoras tbody td {
     padding: 15px 12px;
     vertical-align: top;
 }
@@ -145,6 +145,38 @@ body{
     border-color: var(--accent);
 }
 
+.btn-delete {
+    color: #d32f2f;
+}
+
+.btn-delete:hover {
+    background-color: #ffebee;
+    border-color: #d32f2f;
+}
+
+/* Botão de criar fixo no canto superior direito */
+.btn-create {
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    border: none;
+    text-align: center;
+    background-color: var(--accent);
+    color: #ffffff;
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 1200;
+    box-shadow: 0 8px 24px rgba(1, 156, 153, 0.12);
+}
+
+.btn-create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(1, 156, 153, 0.16);
+}
 
 /* Mensagem de tabela vazia */
 .empty-message {
@@ -298,26 +330,6 @@ body{
     text-align: center;
 }
 
-.btn-create{
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.12s ease;
-    border: none;
-    text-align: center;
-    background-color: #019c99;
-    color: #ffffff;
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    z-index: 1200;
-    box-shadow: 0 8px 24px rgba(11,92,255,0.12);
-}
-.btn-create:hover{ transform: translateY(-2px); }
-.btn-create:hover{ transform: translateY(-2px); }
-
 /* Botão primário (salvar) */
 .btn-salvar {
     background: var(--accent);
@@ -356,7 +368,7 @@ body{
 
 /* ========== RESPONSIVIDADE ========== */
 @media (max-width: 768px) {
-    .categorias-container {
+    .editoras-container {
         padding: 15px 20px;
     }
 
@@ -399,29 +411,29 @@ body{
 }
 
 @media (max-width: 480px) {
-    .tabela-categorias thead {
+    .tabela-editoras thead {
         display: none;
     }
 
-    .tabela-categorias tbody tr {
+    .tabela-editoras tbody tr {
         display: block;
         margin-bottom: 12px;
         border: 1px solid var(--border);
         border-radius: 6px;
     }
 
-    .tabela-categorias tbody td {
+    .tabela-editoras tbody td {
         display: block;
         width: 100%;
         box-sizing: border-box;
         border-bottom: 1px solid #f1f3f6;
     }
 
-    .tabela-categorias tbody td:last-child {
+    .tabela-editoras tbody td:last-child {
         border-bottom: none;
     }
 
-    .tabela-categorias tbody td:before {
+    .tabela-editoras tbody td:before {
         content: attr(data-label);
         display: block;
         font-size: 12px;

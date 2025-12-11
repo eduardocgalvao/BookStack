@@ -12,7 +12,7 @@
 <body>
     <div class="autores-container">
         <header class="top-bar">
-            <a href="{% url 'home' %}" class="voltar">←</a>
+            <a href="{% url 'home' %}" class="back-btn">←</a>
             <h1>Autores cadastrados</h1>
         </header>
 
@@ -32,7 +32,6 @@
                     <tr data-id="{{ autor.id_autor }}" data-nome="{{ autor.nome }}" data-sobrenome="{{ autor.sobrenome }}">
                         <td class="acoes-cell">
                             <button type="button" class="btn btn-edit" data-action="edit" title="Editar">✏️</button>
-                            <button type="button" class="btn btn-delete" data-action="delete" title="Excluir">🗑️</button>
                         </td>
                         <td data-label="Nome">{{ autor.nome }}</td>
                         <td data-label="Sobrenome">{{ autor.sobrenome }}</td>
@@ -72,22 +71,6 @@
                 <div class="btn-area">
                     <button type="button" class="btn-cancelar">Cancelar</button>
                     <button type="submit" class="btn-salvar">Salvar Alterações</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal de Exclusão (estilo Livro) -->
-    <div id="delete-modal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-modal">×</span>
-            <h3>Confirmar Exclusão</h3>
-            <p id="delete-msg">Tem certeza que deseja excluir este autor?</p>
-            <form id="delete-form" method="post" action="">
-                {% csrf_token %}
-                <div class="btn-area">
-                    <button type="button" class="btn-cancelar">Cancelar</button>
-                    <button type="submit" class="btn-confirmar-exclusao">Excluir</button>
                 </div>
             </form>
         </div>

@@ -102,48 +102,6 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="modal-actions">
-                {% if user.is_authenticated %}
-                <button id="btnEmprestar" class="btn btn-primary" onclick="emprestarLivro()">
-                    📥 Emprestar Livro
-                </button>
-                
-                {% if user.is_staff %}
-                <button id="btnEditar" class="btn btn-warning" onclick="editarLivroModal()">
-                    ✏️ Editar Livro
-                </button>
-                
-                <button id="btnExcluir" class="btn btn-danger" onclick="excluirLivroModal()">
-                    🗑️ Excluir Livro
-                </button>
-                {% endif %}
-                
-                {% else %}
-                <a href="{% url 'login' %}?next={% url 'livro_list' %}" class="btn btn-primary">
-                    🔑 Fazer Login para Emprestar
-                </a>
-                {% endif %}
-                
-                <button class="btn btn-secondary" onclick="closeModal(event)">
-                    ✕ Fechar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de confirmação de empréstimo -->
-<div id="confirmLoanModal" class="confirm-modal" style="display: none;">
-    <div class="confirm-content">
-        <h3>📥 Confirmar Empréstimo</h3>
-        <p id="confirmLoanMessage">Deseja emprestar o livro <strong id="confirmLoanTitle"></strong>?</p>
-        <div class="confirm-actions">
-            <button class="btn btn-success" onclick="confirmarEmprestimo()">Confirmar</button>
-            <button class="btn btn-secondary" onclick="fecharConfirmLoanModal()">Cancelar</button>
-        </div>
-    </div>
-</div>
 
 <script>
 // Variáveis globais

@@ -89,6 +89,7 @@ class tbl_livro(models.Model):
     isbn = models.CharField(max_length=20)
     titulo = models.CharField(max_length=255)
     ano_publicacao = models.IntegerField()
+    descricao = models.TextField(blank=True, null=True)
     quantidade = models.IntegerField(default=0)  # Estoque total (NUNCA muda)
     disponivel = models.IntegerField(default=0)  # Disponíveis para empréstimo (VARIÁVEL)
 

@@ -76,6 +76,15 @@ BookStack{% endblock %} {% block extra_css %}
       {% endif %}
     </div>
 
+    <!-- Campo descrição (TEXTAREA) -->
+    <div class="form-group full">
+        <label for="{{ form.descricao.id_for_label }}">Descrição:</label>
+        {{ form.descricao }}
+        {% if form.descricao.errors %}
+        <div class="error">{{ form.descricao.errors }}</div>
+        {% endif %}
+    </div>
+
     <!-- Campo autores (select múltiplo) -->
     <div class="form-group">
       <label for="{{ form.autores.id_for_label }}">Autores:</label>

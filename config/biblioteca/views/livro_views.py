@@ -174,6 +174,7 @@ def api_livro_detail(request, livro_id):
             'id': livro.id_livro,
             'titulo': livro.titulo,
             'ano_publicacao': livro.ano_publicacao,
+            'descricao': livro.descricao if hasattr(livro, 'descricao') else '',
             'editora': livro.editora.nome if livro.editora else '',
             'editora_id': livro.editora.id_editora if livro.editora else None,
             'autores': autores_nomes,  # String com nomes
@@ -274,7 +275,10 @@ def api_livro_update(request, livro_id):
             
             if 'ano_publicacao' in data:
                 livro.ano_publicacao = data['ano_publicacao']
-                
+            
+            if 'descricao' in data:
+                livro.descricao = data['descricao']    
+            
             # Tratamento especial para quantidade (int)
             if 'quantidade' in data:
                 qtde = data['quantidade']

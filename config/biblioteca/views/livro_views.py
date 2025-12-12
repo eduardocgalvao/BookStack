@@ -112,23 +112,6 @@ def livro_list(request):
         'hoje': timezone.now().date(),
         'data_padrao': timezone.now().date() + timedelta(days=10)
     })
-    
-    # Outros dados para o template
-    editoras = tbl_editora.objects.all()
-    categorias = tbl_categoria.objects.all()
-    autores = tbl_autor.objects.all()
-    status_list = tbl_status_livro.objects.filter(ativo=True)
-    
-    return render(request, 'livro/livro_list.html', {
-        'livros_com_relacionados': livros_com_relacionados,
-        'editoras': editoras,
-        'categorias': categorias,
-        'autores': autores,
-        'status_list': status_list,
-        'hoje': timezone.now().date(),
-        'data_padrao': timezone.now().date() + timedelta(days=10)
-    })
-
 
 @csrf_exempt
 @require_http_methods(["GET"])

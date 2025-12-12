@@ -66,6 +66,6 @@ def registro_view(request):
         usuario,
         backend=settings.AUTHENTICATION_BACKENDS[0]
         )       
-        return redirect("auth/login.html")
+        return redirect("/")
 
     return render(request, "auth/registro.html")

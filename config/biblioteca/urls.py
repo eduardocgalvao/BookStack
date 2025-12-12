@@ -47,8 +47,8 @@ from .views import (
 )
 
 # View para o modal
-from .views.home_view import livro_dados_json  # Adicione esta linha
-from .views.home_view import listar_livros  # Adicione esta linha se necessário
+from .views.home_view import livro_dados_json
+from .views.home_view import listar_livros
 
 urlpatterns = [
     # LOGIN
@@ -56,7 +56,7 @@ urlpatterns = [
     path("registro/", registro_view, name="registro"),
 
     # TELA INICIAL (HOME)
-    path('home/', listar_livros, name='home'),  # Use listar_livros
+    path('home/', listar_livros, name='home'),
     
     # API para dados do livro (para o modal)
     path('dados-livro/<int:livro_id>/', livro_dados_json, name='livro_dados_json'),

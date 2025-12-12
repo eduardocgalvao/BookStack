@@ -15,7 +15,7 @@ class LivroCreateForm(forms.ModelForm):
     class Meta:
         model = tbl_livro
         fields = "__all__"
-        exclude = ['status']
+        exclude = ['status', 'disponivel']
         widgets = {
             "isbn": forms.TextInput(attrs={"class": "input-field"}),
             "titulo": forms.TextInput(attrs={"class": "input-field"}),

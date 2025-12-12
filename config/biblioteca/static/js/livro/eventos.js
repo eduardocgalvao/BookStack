@@ -30,15 +30,17 @@ function setupEventListeners() {
                 // Preenche o formulário
                 document.getElementById("edit-id").value = livro.id;
                 document.getElementById("edit-titulo").value = livro.titulo || '';
+                document.getElementById("edit-descricao").value = livro.descricao || ''; // ← ADICIONADO
                 document.getElementById("edit-editora").value = livro.editora_id || '';
                 document.getElementById("edit-ano").value = livro.ano_publicacao || '';
+                
                 if(document.getElementById("edit-quantidade")) {
                     document.getElementById("edit-quantidade").value = livro.quantidade || '';
                 };
 
-                // Preencher o status
-                if (livro.status_id && document.getElementById('edit-status-select')) {
-                    document.getElementById('edit-status-select').value = livro.status_id;
+                // Preencher o status (CORRIGIDO: usar 'edit-status' em vez de 'edit-status-select')
+                if (livro.status_id && document.getElementById('edit-status')) {
+                    document.getElementById('edit-status').value = livro.status_id;
                     console.log("Status preenchido:", livro.status_id);
                 }
                 
@@ -53,6 +55,7 @@ function setupEventListeners() {
                 // DEBUG: Verificar o que veio do backend
                 console.log("Autores IDs recebidos:", livro.autores_ids);
                 console.log("Categorias IDs recebidos:", livro.categorias_ids);
+                console.log("Descrição recebida:", livro.descricao); // ← ADICIONADO
                 
                 // Preenche os autores no Select2
                 if (livro.autores_ids && Array.isArray(livro.autores_ids)) {
@@ -199,9 +202,13 @@ function setupEventListeners() {
             const categoriasSelecionadas = $('#edit-categoria').val() || [];
             console.log("Categorias selecionadas:", categoriasSelecionadas);
 
-            // pega o status selecionado
-            const statusSelecionado = $('#edit-status-select').val();
+            // Pega o status selecionado (CORRIGIDO: usar 'edit-status' em vez de 'edit-status-select')
+            const statusSelecionado = $('#edit-status').val();
             console.log("Status selecionado:", statusSelecionado);
+            
+            // Pega a descrição do textarea ← ADICIONADO
+            const descricao = document.getElementById('edit-descricao').value;
+            console.log("Descrição a ser enviada:", descricao);
             
             let result;
             
@@ -211,9 +218,10 @@ function setupEventListeners() {
                 
                 // Adiciona campos básicos
                 formData.append('titulo', document.getElementById("edit-titulo").value);
+                formData.append('descricao', descricao); // ← ADICIONADO
                 formData.append('editora_id', document.getElementById("edit-editora").value);
                 formData.append('ano_publicacao', document.getElementById("edit-ano").value);
-                formData.append('quantidade', document.getElementById('edit-quantidade').value)
+                formData.append('quantidade', document.getElementById('edit-quantidade').value);
 
                 // Status
                 if (statusSelecionado) {
@@ -245,9 +253,9 @@ function setupEventListeners() {
                 // Usa JSON normal (sem capa)
                 const formData = {
                     titulo: document.getElementById("edit-titulo").value,
+                    descricao: descricao, // ← ADICIONADO
                     editora_id: document.getElementById("edit-editora").value,
                     ano_publicacao: document.getElementById("edit-ano").value,
-                    categoria_id: document.getElementById("edit-categoria").value,
                     quantidade: document.getElementById("edit-quantidade").value,
                     autores_ids: autoresSelecionados,
                     categorias_ids: categoriasSelecionadas

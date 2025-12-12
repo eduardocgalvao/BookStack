@@ -170,7 +170,7 @@
                     <label for="edit-titulo">
                         <span class="label-icon">📌</span> Título *
                     </label>
-                    <input type="text" id="edit-titulo" name="titulo" placeholder="Digite o título do livro" />
+                    <input type="text" id="edit-titulo" name="titulo" placeholder="Digite o título do livro" required />
                 </div>
 
                 <!-- Editora -->
@@ -197,10 +197,10 @@
 
                 <!-- Status -->
                 <div class="campo">
-                    <label for="edit-status-select">
+                    <label for="edit-status">
                         <span class="label-icon">🏷️</span> Status *
                     </label>
-                    <select id="edit-status-select" name="status_id" required class="select-single">
+                    <select id="edit-status" name="status_id" required class="select-single">
                         <option value="">Selecione o status...</option>
                         {% for status in status_list %}
                             <option value="{{ status.id_status }}">{{ status.descricao|title }}</option>
@@ -211,10 +211,10 @@
                 <!-- Quantidade -->
                 <div class="campo">
                     <label for="edit-quantidade">
-                        <span class="label-icon">📚</span> Quantidade Registrada
+                        <span class="label-icon">📚</span> Quantidade Registrada *
                     </label>
                     <input type="number" id="edit-quantidade" name="quantidade" 
-                           min="0" max="2000" placeholder="Número de cópias" />
+                           min="0" max="2000" placeholder="Número de cópias" required />
                 </div>
 
                 <!-- Autores (Select2) -->
@@ -289,6 +289,19 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Botões -->
+            <div class="btn-area">
+                <button type="button" class="btn-cancelar">
+                    <span class="btn-icon">↩️</span> Cancelar
+                </button>
+                <button type="submit" class="btn-salvar">
+                    <span class="btn-icon">💾</span> Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
             <!-- Botões -->
             <div class="btn-area">
@@ -423,28 +436,28 @@
             if (e.target.classList.contains('ver-mais-btn')) {
                 const descricao = e.target.getAttribute('data-descricao');
                 const modalHTML = `
-                    <div class="modal descricao-modal">
+                    <div class="modal descricao-modal" style="display: flex;">
                         <div class="modal-content">
-                            <span class="close-modal">×</span>
-                            <h3>Descrição Completa</h3>
-                            <div class="descricao-completa">
-                                ${descricao}
+                            <div class="modal-header">
+                                <h3>📖 Descrição Completa</h3>
+                                <span class="close-modal">×</span>
                             </div>
-                            <div class="btn-area">
-                                <button type="button" class="btn-cancelar">Fechar</button>
+                            <div class="descricao-completa">
+                                ${descricao.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
                             </div>
                         </div>
                     </div>
                 `;
                 
+
+            // Adiciona o modal ao corpo do documento
                 document.body.insertAdjacentHTML('beforeend', modalHTML);
-                const modal = document.querySelector('.descricao-modal');
-                modal.classList.remove('hidden');
+            const modal = document.querySelector('.descricao-modal');
                 
                 modal.querySelector('.close-modal, .btn-cancelar').addEventListener('click', function() {
                     modal.remove();
                 });
-                
+            
                 modal.addEventListener('click', function(event) {
                     if (event.target === modal) {
                         modal.remove();

@@ -260,26 +260,13 @@
 }
 
 .descricao-truncada:hover {
-    cursor: help;
-    position: relative;
+    text-decoration: underline;
+    text-decoration-color: #019c99;
+    text-underline-offset: 2px;
 }
 
 .descricao-truncada:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    white-space: pre-wrap;
-    max-width: 300px;
-    z-index: 1000;
-    pointer-events: none;
-    margin-bottom: 5px;
+    display: none !important;
 }
 
 .sem-descricao {
@@ -948,19 +935,105 @@
 .descricao-completa {
     background: #f8fafc;
     border: 2px solid #e1e8ed;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 25px;
-    margin: 20px 0;
+    margin: 25px;
     max-height: 400px;
     overflow-y: auto;
-    line-height: 1.8;
+    line-height: 1.6;
     color: #334155;
     font-size: 15px;
-    white-space: pre-wrap;
+    word-wrap: break-word;
+    text-align: justify;
+}
+
+.descricao-modal .close-modal:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.descricao-completa::-webkit-scrollbar {
+    width: 8px;
+}
+
+.descricao-completa::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.descricao-completa::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+.descricao-completa::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.descricao-modal .btn-area {
+    padding: 20px 25px;
+    display: flex;
+    justify-content: flex-end;
+    border-top: 2px solid #f1f5f9;
+    margin: 0 25px;
+}
+
+.descricao-modal .btn-cancelar {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    color: #475569;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.descricao-modal .btn-cancelar:hover {
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    color: #334155;
+}
+
+.descricao-modal .close-modal {
+    font-size: 32px;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.descricao-modal .modal-header h3 {
+    margin: 0;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.descricao-modal .modal-header {
+    background: linear-gradient(135deg, #019c99, #017a78);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .descricao-modal .modal-content {
     max-width: 600px;
+    background: white;
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
 }
 
 /* ========== ANIMAÇÕES ========== */
